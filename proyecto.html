@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva de Canchas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f0f2f5;
+        }
+        .container-page {
+            display: none; /* Oculta todas las páginas por defecto */
+        }
+        .container-page.active {
+            display: block; /* Muestra la página activa */
+        }
+        .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        .reserva-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-radius: 8px;
+            background-color: #fff;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="login-page" class="container-page active">
+        <div class="container">
+            <div class="login-container">
+                <h2 class="text-center mb-4">Iniciar Sesión</h2>
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Usuario</label>
+                        <input type="text" class="form-control" id="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" id="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="listado-page" class="container-page">
+        <div class="container mt-5">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">Mis Canchas</a>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="showListado">Canchas Disponibles</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="showMisReservas">Mis Reservas</a>
+                            </li>
+                        </ul>
+                        <span class="navbar-text">
+                            <a href="#" id="logout">Cerrar Sesión</a>
+                        </span>
+                    </div>
+                </div>
+            </nav>
+            <h2 class="mb-4 mt-4">Selección de Cancha/Deporte</h2>
+            <div class="card p-4 mb-4">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label for="deporte-filtro" class="form-label">Deporte</label>
+                        <select id="deporte-filtro" class="form-select">
+                            <option selected value="todos">Todos</option>
+                            <option value="futbol">Fútbol</option>
+                            <option value="tenis">Tenis</option>
+                            <option value="padel">Pádel</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="fecha-filtro" class="form-label">Fecha</label>
+                        <input type="date" id="fecha-filtro" class="form-control">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button class="btn btn-primary w-100">Filtrar</button>
+                    </div>
+                </div>
+            </div>
+            <div id="canchas-listado" class="row">
+                <div class="col-md-4" data-deporte="futbol">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="Cancha de Fútbol">
+                        <div class="card-body">
+                            <h5 class="card-title">Cancha de Fútbol 1</h5>
+                            <p class="card-text">Deporte: Fútbol</p>
+                            <button class="btn btn-success reservar-btn" data-cancha="Cancha de Fútbol 1">Reservar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-deporte="tenis">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="Cancha de Tenis">
+                        <div class="card-body">
+                            <h5 class="card-title">Cancha de Tenis 1</h5>
+                            <p class="card-text">Deporte: Tenis</p>
+                            <button class="btn btn-success reservar-btn" data-cancha="Cancha de Tenis 1">Reservar</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-deporte="padel">
+                    <div class="card">
+                        <img src="https://via.placeholder.com/400x200" class="card-img-top" alt="Cancha de Pádel">
+                        <div class="card-body">
+                            <h5 class="card-title">Cancha de Pádel 1</h5>
+                            <p class="card-text">Deporte: Pádel</p>
+                            <button class="btn btn-success reservar-btn" data-cancha="Cancha de Pádel 1">Reservar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="reserva-page" class="container-page">
+        <div class="container">
+            <div class="login-container">
+                <h2 class="text-center mb-4">Reserva de Cancha</h2>
+                <form id="reservaForm">
+                    <div class="mb-3">
+                        <label for="nombre-reserva" class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" id="nombre-reserva" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cancha-reserva" class="form-label">Cancha a Reservar</label>
+                        <input type="text" class="form-control" id="cancha-reserva" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="fecha-reserva" class="form-label">Fecha</label>
+                        <input type="date" class="form-control" id="fecha-reserva" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hora-reserva" class="form-label">Hora</label>
+                        <input type="time" class="form-control" id="hora-reserva" required>
+                    </div>
+                    <button type="button" class="btn btn-primary w-100" id="btnConfirmarReserva">Confirmar Reserva</button>
+                </form>
+                <button type="button" class="btn btn-secondary w-100 mt-2" onclick="showPage('listado-page')">Volver</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mis-reservas-page" class="container-page">
+        <div class="container mt-5">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">Mis Canchas</a>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="showListado2">Canchas Disponibles</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#" id="showMisReservas2">Mis Reservas</a>
+                            </li>
+                        </ul>
+                        <span class="navbar-text">
+                            <a href="#" id="logout2">Cerrar Sesión</a>
+                        </span>
+                    </div>
+                </div>
+            </nav>
+            <h2 class="mb-4 mt-4">Mis Reservas</h2>
+            <div id="reservas-listado">
+                </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="confirmacionModal" tabindex="-1" aria-labelledby="confirmacionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmacionModalLabel">Confirmar Reserva</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas reservar la cancha en la fecha y hora seleccionada?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" id="btnProcesarReserva">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">¡Error en la Reserva!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Lo sentimos, esta cancha ya está reservada en la fecha y hora seleccionada. Por favor, elige otro horario.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="feedbackModalLabel">Deja tu Opinión</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¡Gracias por tu reserva! ¿Qué tal fue tu experiencia?</p>
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Omitir</button>
+                    <button type="button" class="btn btn-primary">Enviar Feedback</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="cancelacionModal" tabindex="-1" aria-labelledby="cancelacionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cancelacionModalLabel">Confirmar Cancelación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas cancelar esta reserva?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No, mantener</button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmarCancelacion">Sí, cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simulamos la base de datos de reservas
+        let reservas = [
+            { id: 1, cancha: 'Cancha de Fútbol 1', fecha: '2025-08-30', hora: '10:00' },
+            { id: 2, cancha: 'Cancha de Tenis 1', fecha: '2025-08-31', hora: '14:00' }
+        ];
+
+        let idReservaACancelar = null;
+
+        function showPage(pageId) {
+            document.querySelectorAll('.container-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        // Lógica de navegación
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            showPage('listado-page');
+        });
+
+        document.getElementById('logout').addEventListener('click', function() {
+            showPage('login-page');
+        });
+        document.getElementById('logout2').addEventListener('click', function() {
+            showPage('login-page');
+        });
+
+        document.getElementById('showListado').addEventListener('click', function() {
+            showPage('listado-page');
+        });
+        document.getElementById('showListado2').addEventListener('click', function() {
+            showPage('listado-page');
+        });
+
+        document.getElementById('showMisReservas').addEventListener('click', function() {
+            showPage('mis-reservas-page');
+            cargarReservas();
+        });
+        document.getElementById('showMisReservas2').addEventListener('click', function() {
+            showPage('mis-reservas-page');
+            cargarReservas();
+        });
+
+        // Lógica de Reservas
+        document.querySelectorAll('.reservar-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const cancha = this.getAttribute('data-cancha');
+                document.getElementById('cancha-reserva').value = cancha;
+                showPage('reserva-page');
+            });
+        });
+
+        document.getElementById('btnConfirmarReserva').addEventListener('click', function() {
+            const cancha = document.getElementById('cancha-reserva').value;
+            const fecha = document.getElementById('fecha-reserva').value;
+            const hora = document.getElementById('hora-reserva').value;
+            const reservaExistente = reservas.find(reserva =>
+                reserva.cancha === cancha && reserva.fecha === fecha && reserva.hora === hora
+            );
+
+            if (reservaExistente) {
+                var errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                errorModal.show();
+            } else {
+                var confirmacionModal = new bootstrap.Modal(document.getElementById('confirmacionModal'));
+                confirmacionModal.show();
+            }
+        });
+
+        document.getElementById('btnProcesarReserva').addEventListener('click', function() {
+            const cancha = document.getElementById('cancha-reserva').value;
+            const fecha = document.getElementById('fecha-reserva').value;
+            const hora = document.getElementById('hora-reserva').value;
+            const nuevaReserva = {
+                id: reservas.length + 1,
+                cancha,
+                fecha,
+                hora
+            };
+            reservas.push(nuevaReserva);
+
+            var confirmacionModal = bootstrap.Modal.getInstance(document.getElementById('confirmacionModal'));
+            confirmacionModal.hide();
+            
+            var feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
+            feedbackModal.show();
+        });
+
+        // Lógica de Filtrado
+        document.getElementById('deporte-filtro').addEventListener('change', function() {
+            const deporteSeleccionado = this.value;
+            const canchas = document.querySelectorAll('#canchas-listado .col-md-4');
+            canchas.forEach(cancha => {
+                if (deporteSeleccionado === 'todos' || cancha.getAttribute('data-deporte') === deporteSeleccionado) {
+                    cancha.style.display = 'block';
+                } else {
+                    cancha.style.display = 'none';
+                }
+            });
+        });
+
+        // Lógica de Mis Reservas
+        function cargarReservas() {
+            const listado = document.getElementById('reservas-listado');
+            listado.innerHTML = '';
+            if (reservas.length === 0) {
+                listado.innerHTML = '<p class="text-center mt-4">No tienes reservas activas.</p>';
+                return;
+            }
+            reservas.forEach(reserva => {
+                const item = document.createElement('div');
+                item.className = 'reserva-item';
+                item.innerHTML = `
+                    <div>
+                        <strong>${reserva.cancha}</strong>
+                        <p>Fecha: ${reserva.fecha} | Hora: ${reserva.hora}</p>
+                    </div>
+                    <button class="btn btn-danger btn-cancelar" data-id="${reserva.id}" data-bs-toggle="modal" data-bs-target="#cancelacionModal">Cancelar</button>
+                `;
+                listado.appendChild(item);
+            });
+        }
+
+        document.getElementById('reservas-listado').addEventListener('click', function(e) {
+            if (e.target.classList.contains('btn-cancelar')) {
+                idReservaACancelar = e.target.getAttribute('data-id');
+            }
+        });
+
+        document.getElementById('btnConfirmarCancelacion').addEventListener('click', function() {
+            reservas = reservas.filter(reserva => reserva.id != idReservaACancelar);
+            cargarReservas();
+            var cancelacionModal = bootstrap.Modal.getInstance(document.getElementById('cancelacionModal'));
+            cancelacionModal.hide();
+        });
+    </script>
+</body>
+</html>
