@@ -22,10 +22,10 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#" id="showMisReservas"><i class="fas fa-calendar-check me-2"></i>Mis Reservas</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="showFeedback"><i class="fas fa-comment-dots me-2"></i>Dejar Opinión</a>
+                        </li>
                     </ul>
-                    <span class="navbar-text">
-                        <a href="#" id="logout" class="text-danger"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a>
-                    </span>
                 </div>
             </div>
         </nav>
@@ -97,10 +97,10 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="#" id="showMisReservas2"><i class="fas fa-calendar-check me-2"></i>Mis Reservas</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="showFeedback2"><i class="fas fa-comment-dots me-2"></i>Dejar Opinión</a>
+                        </li>
                     </ul>
-                    <span class="navbar-text">
-                        <a href="#" id="logout2" class="text-danger"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a>
-                    </span>
                 </div>
             </div>
         </nav>
@@ -109,6 +109,61 @@
             <div id="reservas-listado">
                 </div>
             <p id="no-reservas-msg" class="text-center mt-4 text-light" style="display: none;">No tienes reservas activas.</p>
+        </div>
+    </div>
+
+    <div id="feedback-page" class="container-page">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand fw-bold" href="#"><i class="fas fa-futbol me-2"></i>Canchas Limache</a>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="showListado3"><i class="fas fa-list me-2"></i>Canchas Disponibles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" id="showMisReservas3"><i class="fas fa-calendar-check me-2"></i>Mis Reservas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#" id="showFeedback3"><i class="fas fa-comment-dots me-2"></i>Dejar Opinión</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container mt-5">
+            <div class="login-container">
+                <h2 class="text-center mb-4 fw-bold"><i class="fas fa-comment-dots me-2"></i>Dejar tu Opinión</h2>
+                <form id="feedbackForm">
+                    <div class="mb-3">
+                        <label for="usuario-feedback" class="form-label">Nombre de Usuario</label>
+                        <input type="text" class="form-control" id="usuario-feedback" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cancha-feedback" class="form-label">Seleccionar Cancha</label>
+                        <select id="cancha-feedback" class="form-select" required>
+                            <option value="" disabled selected>Selecciona una cancha</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="calificacion-feedback" class="form-label">Calificación</label>
+                        <div id="calificacion-feedback" class="d-flex gap-1 my-2">
+                            <i class="fas fa-star star-rating" data-rating="1"></i>
+                            <i class="fas fa-star star-rating" data-rating="2"></i>
+                            <i class="fas fa-star star-rating" data-rating="3"></i>
+                            <i class="fas fa-star star-rating" data-rating="4"></i>
+                            <i class="fas fa-star star-rating" data-rating="5"></i>
+                        </div>
+                        <small class="text-muted">Selecciona de 1 a 5 estrellas</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="comentario-feedback" class="form-label">Comentario</label>
+                        <textarea id="comentario-feedback" class="form-control" rows="4" placeholder="Comparte tu experiencia sobre esta cancha..." required></textarea>
+                    </div>
+                    <button type="button" class="btn btn-primary w-100 btn-rounded mt-3" id="btnEnviarFeedback"><i class="fas fa-paper-plane me-2"></i>Enviar Opinión</button>
+                </form>
+                <button type="button" class="btn btn-secondary w-100 btn-rounded mt-2" onclick="showPage('listado-page')"><i class="fas fa-arrow-left me-2"></i>Volver</button>
+            </div>
         </div>
     </div>
 
@@ -181,25 +236,26 @@
         </div>
     </div>
 
-    <div class="modal fade" id="feedbackModal" tabindex="-1" aria-labelledby="feedbackModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="comentariosModal" tabindex="-1" aria-labelledby="comentariosModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="feedbackModalLabel"><i class="fas fa-comment-dots me-2"></i>Deja tu Opinión</h5>
+                    <h5 class="modal-title" id="comentariosModalLabel"><i class="fas fa-comments me-2"></i>Opiniones de la Cancha</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>¡Gracias por tu reserva! ¿Qué tal fue tu experiencia?</p>
-                    <textarea class="form-control" rows="3"></textarea>
+                    <div id="comentarios-listado">
+                        <!-- Aquí se cargarán los comentarios -->
+                    </div>
+                    <p id="no-comentarios-msg" class="text-center text-muted" style="display: none;">No hay opiniones para esta cancha aún.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal">Omitir</button>
-                    <button type="button" class="btn btn-primary btn-rounded">Enviar Feedback</button>
+                    <button type="button" class="btn btn-secondary btn-rounded" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div class="modal fade" id="cancelacionModal" tabindex="-1" aria-labelledby="cancelacionModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

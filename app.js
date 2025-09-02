@@ -1,6 +1,8 @@
 let canchas = [];
 let reservas = [];
+let feedbacks = [];
 let idReservaACancelar = null;
+let calificacionSeleccionada = 0;
 
 // Función para obtener el nombre de cancha por ID
 function obtenerNombreCanchaPorId(canchaId) {
@@ -53,6 +55,44 @@ async function cargarReservasDesdeJSON() {
     }
 }
 
+async function cargarFeedbacksDesdeJSON() {
+    try {
+        const response = await fetch('feedbacks.json');
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        feedbacks = await response.json();
+        console.log('Feedbacks cargados:', feedbacks.length);
+    } catch (error) {
+        console.error("Error al cargar feedbacks:", error);
+        feedbacks = [];
+    }
+}
+
+// Función para calcular el promedio de calificación de una cancha
+function calcularPromedioCalificacion(canchaId) {
+    const feedbacksCancha = feedbacks.filter(f => f.canchaId === canchaId);
+    if (feedbacksCancha.length === 0) return 0;
+    
+    const suma = feedbacksCancha.reduce((total, feedback) => total + feedback.calificacion, 0);
+    return (suma / feedbacksCancha.length).toFixed(1);
+}
+
+// Función para generar estrellas HTML basado en calificación
+function generarEstrellas(calificacion) {
+    let estrellas = '';
+    const calificacionRedondeada = Math.round(calificacion);
+    
+    for (let i = 1; i <= 5; i++) {
+        if (i <= calificacionRedondeada) {
+            estrellas += '<i class="fas fa-star"></i>';
+        } else {
+            estrellas += '<i class="far fa-star"></i>';
+        }
+    }
+    return estrellas;
+}
+
 function renderizarCanchas(canchasFiltradas = canchas) {
     const listado = document.getElementById('canchas-listado');
     listado.innerHTML = '';
@@ -61,12 +101,21 @@ function renderizarCanchas(canchasFiltradas = canchas) {
         return;
     }
     canchasFiltradas.forEach(cancha => {
+        const promedio = calcularPromedioCalificacion(cancha.id);
+        const estrellas = generarEstrellas(promedio);
+        const totalFeedbacks = feedbacks.filter(f => f.canchaId === cancha.id).length;
+        
         const card = document.createElement('div');
         card.className = 'col-md-4 mb-4';
         card.setAttribute('data-deporte', cancha.deporte);
         card.innerHTML = `
             <div class="card h-100">
                 <img src="${cancha.imagen}" class="card-img-top" alt="${cancha.nombre}">
+                ${promedio > 0 ? `
+                <div class="card-rating" onclick="mostrarComentarios('${cancha.id}')" data-bs-toggle="modal" data-bs-target="#comentariosModal">
+                    ${estrellas} ${promedio} (${totalFeedbacks})
+                </div>
+                ` : ''}
                 <div class="card-body">
                     <h5 class="card-title fw-bold">${cancha.nombre}</h5>
                     <p class="card-text text-muted">Deporte: ${cancha.deporte.charAt(0).toUpperCase() + cancha.deporte.slice(1)}</p>
@@ -126,8 +175,13 @@ function generateTimeOptions() {
 
 document.getElementById('showListado').addEventListener('click', function() { showPage('listado-page'); });
 document.getElementById('showListado2').addEventListener('click', function() { showPage('listado-page'); });
+document.getElementById('showListado3').addEventListener('click', function() { showPage('listado-page'); });
 document.getElementById('showMisReservas').addEventListener('click', function() { showPage('mis-reservas-page'); cargarReservas(); });
 document.getElementById('showMisReservas2').addEventListener('click', function() { showPage('mis-reservas-page'); cargarReservas(); });
+document.getElementById('showMisReservas3').addEventListener('click', function() { showPage('mis-reservas-page'); cargarReservas(); });
+document.getElementById('showFeedback').addEventListener('click', function() { showPage('feedback-page'); cargarCanchasEnSelect(); });
+document.getElementById('showFeedback2').addEventListener('click', function() { showPage('feedback-page'); cargarCanchasEnSelect(); });
+document.getElementById('showFeedback3').addEventListener('click', function() { showPage('feedback-page'); cargarCanchasEnSelect(); });
 
 document.getElementById('btnConfirmarReserva').addEventListener('click', function() {
     const nombre = document.getElementById('nombre-reserva').value;
@@ -190,11 +244,6 @@ document.getElementById('btnProcesarReserva').addEventListener('click', function
     
     var reservaExitosaModal = new bootstrap.Modal(document.getElementById('reservaExitosaModal'));
     reservaExitosaModal.show();
-
-    setTimeout(() => {
-        var feedbackModal = new bootstrap.Modal(document.getElementById('feedbackModal'));
-        feedbackModal.show();
-    }, 1500);
 });
 
 function cargarReservas() {
@@ -247,6 +296,146 @@ document.getElementById('btnConfirmarCancelacion').addEventListener('click', fun
     cancelacionExitosaModal.show();
 });
 
+// Función para cargar canchas en el select del formulario de feedback
+function cargarCanchasEnSelect() {
+    const select = document.getElementById('cancha-feedback');
+    select.innerHTML = '<option value="" disabled selected>Selecciona una cancha</option>';
+    
+    canchas.forEach(cancha => {
+        const option = document.createElement('option');
+        option.value = cancha.id;
+        option.textContent = cancha.nombre;
+        select.appendChild(option);
+    });
+}
+
+// Función para inicializar el sistema de calificación con estrellas
+function inicializarSistemaCalificacion() {
+    const estrellas = document.querySelectorAll('.star-rating');
+    
+    estrellas.forEach((estrella, index) => {
+        estrella.addEventListener('mouseenter', function() {
+            for (let i = 0; i <= index; i++) {
+                estrellas[i].classList.add('active');
+            }
+        });
+        
+        estrella.addEventListener('mouseleave', function() {
+            estrellas.forEach(e => e.classList.remove('active'));
+        });
+        
+        estrella.addEventListener('click', function() {
+            calificacionSeleccionada = index + 1;
+            estrellas.forEach((e, i) => {
+                if (i < calificacionSeleccionada) {
+                    e.classList.add('filled');
+                } else {
+                    e.classList.remove('filled');
+                }
+            });
+        });
+    });
+}
+
+// Función para enviar feedback
+document.getElementById('btnEnviarFeedback').addEventListener('click', function() {
+    const usuario = document.getElementById('usuario-feedback').value;
+    const canchaId = document.getElementById('cancha-feedback').value;
+    const comentario = document.getElementById('comentario-feedback').value;
+    
+    if (!usuario || !canchaId || !comentario || calificacionSeleccionada === 0) {
+        alert('Por favor, completa todos los campos y selecciona una calificación.');
+        return;
+    }
+    
+    // Generar nuevo ID para el feedback
+    const nuevoId = 'F' + String(feedbacks.length + 1).padStart(3, '0');
+    const nuevoFeedback = {
+        id: nuevoId,
+        usuario: usuario,
+        canchaId: canchaId,
+        calificacion: calificacionSeleccionada,
+        comentario: comentario,
+        fecha: new Date().toISOString().split('T')[0],
+        timestamp: new Date().toISOString()
+    };
+    
+    feedbacks.push(nuevoFeedback);
+    
+    // Limpiar formulario
+    document.getElementById('usuario-feedback').value = '';
+    document.getElementById('cancha-feedback').value = '';
+    document.getElementById('comentario-feedback').value = '';
+    calificacionSeleccionada = 0;
+    document.querySelectorAll('.star-rating').forEach(e => {
+        e.classList.remove('filled');
+        e.classList.remove('active');
+    });
+    
+    // Mostrar mensaje de éxito
+    const successMessage = document.createElement('div');
+    successMessage.className = 'feedback-success';
+    successMessage.innerHTML = '<i class="fas fa-check-circle me-2"></i>¡Gracias por tu opinión! Tu feedback ha sido enviado correctamente.';
+    
+    const form = document.getElementById('feedbackForm');
+    form.appendChild(successMessage);
+    
+    // Remover mensaje después de 3 segundos
+    setTimeout(() => {
+        successMessage.remove();
+    }, 3000);
+    
+    // Actualizar las tarjetas de canchas para mostrar la nueva calificación
+    renderizarCanchas();
+});
+
+// Función para mostrar comentarios de una cancha específica
+function mostrarComentarios(canchaId) {
+    const cancha = canchas.find(c => c.id === canchaId);
+    const feedbacksCancha = feedbacks.filter(f => f.canchaId === canchaId);
+    
+    document.getElementById('comentariosModalLabel').innerHTML = 
+        `<i class="fas fa-comments me-2"></i>Opiniones de ${cancha.nombre}`;
+    
+    const listado = document.getElementById('comentarios-listado');
+    const noComentariosMsg = document.getElementById('no-comentarios-msg');
+    
+    listado.innerHTML = '';
+    
+    if (feedbacksCancha.length === 0) {
+        noComentariosMsg.style.display = 'block';
+        return;
+    } else {
+        noComentariosMsg.style.display = 'none';
+    }
+    
+    // Ordenar por fecha más reciente
+    const feedbacksOrdenados = [...feedbacksCancha].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    feedbacksOrdenados.forEach(feedback => {
+        const item = document.createElement('div');
+        item.className = 'comentario-item';
+        
+        const estrellas = generarEstrellas(feedback.calificacion);
+        
+        item.innerHTML = `
+            <div class="comentario-header">
+                <div>
+                    <span class="comentario-usuario">${feedback.usuario}</span>
+                    <div class="rating-stars text-warning mt-1">${estrellas}</div>
+                </div>
+                <span class="comentario-fecha">${feedback.fecha}</span>
+            </div>
+            <p class="comentario-texto">${feedback.comentario}</p>
+        `;
+        
+        listado.appendChild(item);
+    });
+}
+
+// Función global para hacer accesible desde el HTML
+window.mostrarComentarios = mostrarComentarios;
+
 document.addEventListener('DOMContentLoaded', () => {
     // Configurar fecha mínima como hoy
     const today = new Date().toISOString().split('T')[0];
@@ -259,16 +448,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Cargar datos y inicializar la aplicación
     Promise.all([
         cargarCanchasDesdeJSON(),
-        cargarReservasDesdeJSON()
+        cargarReservasDesdeJSON(),
+        cargarFeedbacksDesdeJSON()
     ]).then(() => {
         console.log('Datos cargados correctamente');
         console.log('Canchas:', canchas.length);
         console.log('Reservas:', reservas.length);
+        console.log('Feedbacks:', feedbacks.length);
+        renderizarCanchas(); // Re-renderizar para mostrar calificaciones
     }).catch(error => {
         console.error('Error al cargar los datos:', error);
     });
     
     generateTimeOptions();
+    inicializarSistemaCalificacion();
     
     // Valores por defecto para testing (opcional)
     const usernameField = document.getElementById('username');
