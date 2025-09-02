@@ -27,15 +27,16 @@ body {
 }
 
 .form-control {
-    background-color: #49617a;
+    background-color: #ffffff;
     border: 1px solid #587593;
-    color: #ecf0f1;
+    color: #2c3e50; /* Texto negro para mejor legibilidad */
 }
 
 .form-control:focus {
-    background-color: #49617a;
+    background-color: #ffffff;
     border-color: #f1c40f;
     box-shadow: 0 0 0 0.25rem rgba(241, 196, 15, 0.25);
+    color: #2c3e50; /* Mantener texto negro al hacer focus */
 }
 
 .form-label {
@@ -63,6 +64,14 @@ body {
 
 .card-body {
     padding: 1.5rem;
+}
+
+.card-title {
+    color: #ffffff !important; /* Título más visible en amarillo */
+}
+
+.card-text {
+    color: #bdc3c7 !important; /* Texto más claro y legible */
 }
 
 .reserva-item {
@@ -208,4 +217,67 @@ body {
 .rating-stars {
     display: inline-flex;
     gap: 2px;
+}
+
+/* Estilos para las tarjetas de comentarios */
+.comentario-item {
+    background-color: #34495e;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #f39c12;
+}
+
+.comentario-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.comentario-usuario {
+    font-weight: bold;
+    color: #f1c40f;
+}
+
+.comentario-fecha {
+    font-size: 0.875rem;
+    color: #95a5a6;
+}
+
+.comentario-texto {
+    color: #ecf0f1;
+    margin-bottom: 0.5rem;
+}
+
+/* Estilos para calificación en las cards de canchas */
+.card-rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(0,0,0,0.7);
+    color: #f39c12;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.card-rating:hover {
+    background: rgba(0,0,0,0.9);
+}
+
+.card {
+    position: relative;
+}
+
+/* Mensaje de éxito para feedback */
+.feedback-success {
+    background-color: #2ecc71;
+    color: white;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 1rem;
+    text-align: center;
 }
