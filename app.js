@@ -278,8 +278,7 @@ function cargarReservas() {
         item.innerHTML = `
             <div>
                 <strong class="text-warning">${nombreCancha}</strong>
-                <p class="mb-0 text-muted">Fecha: ${reserva.fecha} | Hora: ${reserva.hora}</p>
-                <small class="text-secondary">${reserva.usuario}</small>
+                <small class="card-text">Usuario: ${reserva.usuario} | Fecha: ${reserva.fecha} | Hora: ${reserva.hora}</small>
             </div>
             <button class="btn btn-danger btn-rounded btn-cancelar" data-id="${reserva.id}" data-bs-toggle="modal" data-bs-target="#cancelacionModal"><i class="fas fa-trash-alt me-2"></i>Cancelar</button>
         `;
@@ -474,9 +473,4 @@ document.addEventListener('DOMContentLoaded', () => {
     generateTimeOptions();
     inicializarSistemaCalificacion();
     
-    // Valores por defecto para testing (opcional)
-    const usernameField = document.getElementById('username');
-    const passwordField = document.getElementById('password');
-    if (usernameField) usernameField.value = 'user';
-    if (passwordField) passwordField.value = 'password';
 });
