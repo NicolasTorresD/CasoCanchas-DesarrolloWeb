@@ -173,15 +173,24 @@ function generateTimeOptions() {
     }
 }
 
-document.getElementById('showListado').addEventListener('click', function() { showPage('listado-page'); });
-document.getElementById('showListado2').addEventListener('click', function() { showPage('listado-page'); });
-document.getElementById('showListado3').addEventListener('click', function() { showPage('listado-page'); });
-document.getElementById('showMisReservas').addEventListener('click', function() { showPage('mis-reservas-page'); cargarReservas(); });
-document.getElementById('showMisReservas2').addEventListener('click', function() { showPage('mis-reservas-page'); cargarReservas(); });
-document.getElementById('showMisReservas3').addEventListener('click', function() { showPage('mis-reservas-page'); cargarReservas(); });
-document.getElementById('showFeedback').addEventListener('click', function() { showPage('feedback-page'); cargarCanchasEnSelect(); });
-document.getElementById('showFeedback2').addEventListener('click', function() { showPage('feedback-page'); cargarCanchasEnSelect(); });
-document.getElementById('showFeedback3').addEventListener('click', function() { showPage('feedback-page'); cargarCanchasEnSelect(); });
+// Función para limpiar completamente el formulario de reserva
+function limpiarFormularioCompleto() {
+    document.getElementById('nombre-reserva').value = '';
+    document.getElementById('cancha-reserva').value = '';
+    document.getElementById('cancha-reserva').removeAttribute('data-cancha-id');
+    document.getElementById('fecha-reserva').value = '';
+    document.getElementById('hora-reserva').value = '';
+}
+
+document.getElementById('showListado').addEventListener('click', function() { limpiarFormularioCompleto(); showPage('listado-page'); });
+document.getElementById('showListado2').addEventListener('click', function() { limpiarFormularioCompleto(); showPage('listado-page'); });
+document.getElementById('showListado3').addEventListener('click', function() { limpiarFormularioCompleto(); showPage('listado-page'); });
+document.getElementById('showMisReservas').addEventListener('click', function() { limpiarFormularioCompleto(); showPage('mis-reservas-page'); cargarReservas(); });
+document.getElementById('showMisReservas2').addEventListener('click', function() { limpiarFormularioCompleto(); showPage('mis-reservas-page'); cargarReservas(); });
+document.getElementById('showMisReservas3').addEventListener('click', function() { limpiarFormularioCompleto(); showPage('mis-reservas-page'); cargarReservas(); });
+document.getElementById('showFeedback').addEventListener('click', function() { limpiarFormularioCompleto(); showPage('feedback-page'); cargarCanchasEnSelect(); });
+document.getElementById('showFeedback2').addEventListener('click', function() { limpiarFormularioCompleto(); showPage('feedback-page'); cargarCanchasEnSelect(); });
+document.getElementById('showFeedback3').addEventListener('click', function() { limpiarFormularioCompleto(); showPage('feedback-page'); cargarCanchasEnSelect(); });
 
 document.getElementById('btnConfirmarReserva').addEventListener('click', function() {
     const nombre = document.getElementById('nombre-reserva').value;
@@ -233,9 +242,10 @@ document.getElementById('btnProcesarReserva').addEventListener('click', function
     };
     reservas.push(nuevaReserva);
 
-    // Limpiar formulario
+    // Limpiar formulario EXCEPTO la cancha seleccionada
     document.getElementById('nombre-reserva').value = '';
-    document.getElementById('cancha-reserva').value = '';
+    // NO limpiar: document.getElementById('cancha-reserva').value = '';
+    // NO limpiar: document.getElementById('cancha-reserva').setAttribute('data-cancha-id', '');
     document.getElementById('fecha-reserva').value = '';
     document.getElementById('hora-reserva').value = '';
 
@@ -435,6 +445,7 @@ function mostrarComentarios(canchaId) {
 
 // Función global para hacer accesible desde el HTML
 window.mostrarComentarios = mostrarComentarios;
+window.limpiarFormularioCompleto = limpiarFormularioCompleto;
 
 document.addEventListener('DOMContentLoaded', () => {
     // Configurar fecha mínima como hoy
