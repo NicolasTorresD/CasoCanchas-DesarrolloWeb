@@ -1,165 +1,152 @@
-# 🏟️ Reservas de Canchas Deportivas – *Frontend Only*
+# Proyecto: Reservas de Canchas con Vue.js y API del Clima (OpenWeatherMap)
 
-> **Asignatura:** Desarrollo Web y Móvil  
-> **Objetivo:** Prototipo de sistema de reservas de canchas deportivas sin backend, desarrollado con **HTML**, **CSS**, **JavaScript**, **Bootstrap** y persistencia en **localStorage**.
-
----
-
-## 📄 Descripción del Proyecto
-
-Este proyecto implementa un **sistema de reservas de canchas deportivas** para un club. Permite a los usuarios seleccionar el deporte, elegir una cancha, definir fecha y hora de reserva, validar la disponibilidad y confirmar la reserva mediante **modales interactivos**.
-
-**Características principales:**
-- Listado dinámico de canchas por deporte.
-- Formulario para reservar con validaciones.
-- Calendario simple de reservas confirmadas.
-- Cancelación de reservas mediante modal de confirmación.
-- Persistencia en **localStorage** para simular un backend.
-- Uso de **Bootstrap** para diseño responsivo y componentes visuales.
+> **Asignatura:** Desarrollo Web y Móvil
+> **Integrantes:** Bastián Oyanadel, Pablo Sepúlveda, Nicolás Torres, Benjamín Vivanco
+> **Framework:** Vue.js
+> **API utilizada:** OpenWeatherMap (versión gratuita)
+> **Apoyo de IA:** Desarrollo asistido por Inteligencia Artificial (ChatGPT / VSCode Copilot)
 
 ---
 
-## 🔧 Instalación y Configuración
+## Descripción General
 
-### **1. Clonar el repositorio**
-```bash
-git clone https://github.com/usuario/CasoCanchas.git
-cd CasoCanchas
-```
+Este proyecto extiende el proyecto original de reservas de canchas deportivas, integrando ahora el framework Vue.js para una mejor organización del frontend y el consumo de una API externa (OpenWeatherMap) que permite mostrar el clima actual en la vista de reservas.
 
-### **2. Abrir el proyecto**
-Como es **Frontend Only**, basta con abrir `index.html` en el navegador.
-
-### **3. Requisitos previos**
-- Navegador moderno compatible con `localStorage` y `fetch()`.
-- **Bootstrap 5** integrado mediante CDN.
+El objetivo es ofrecer una experiencia más completa al usuario, mostrando las condiciones climáticas del día antes de confirmar la reserva, ayudando a tomar decisiones informadas según el clima.
 
 ---
 
-## 🗂️ Estructura del Proyecto
+## Tecnologías y Herramientas
+
+| **Vue.js 3**            : Framework frontend para estructurar componentes y gestionar el estado de la app.                
+| **Bootstrap 5**         : Framework de CSS para estilos responsivos, modales y componentes visuales.                      
+| **OpenWeatherMap API**  : Fuente externa de datos meteorológicos en tiempo real.                                          
+| **JavaScript (ES6)**    : Lógica funcional para manejo de datos y eventos.                                                
+| **JSON / LocalStorage** : Persistencia local de reservas y canchas.                                                       
+| **Visual Studio Code**  : Entorno de desarrollo.                                                                          
+| **ChatGPT / Copilot**   : Asistente de programación para integración de Vue, resolución de errores y conexión con la API. 
+
+---
+
+## Estructura del Proyecto
 
 ```bash
-CasoCanchas/
-├── app.js               # Lógica principal en JavaScript
-├── canchas.json         # Datos de canchas
-├── feedbacks.json       # Mensajes de feedback
-├── index.html           # Página principal de reservas
-├── reservas.json        # Datos iniciales de reservas
-├── styles.css           # Estilos personalizados
-└── imagenes/            # Recursos gráficos
-    ├── cancha-padel.png
-    ├── cancha-tenis.png
-    ├── chancha-futbol.png
-    └── d3900ac9-0679-4715-a069-df05ccf749a3.png
+CasoCanchasVue/
+├── app-vue.js              # Lógica principal con Vue.js y consumo de la API del clima
+├── app.js                  # Código base original sin framework
+├── public/
+│   ├── canchas.json        # Datos locales de canchas disponibles
+│   ├── reservas.json       # Datos de reservas iniciales
+│   ├── feedbacks.json      # Mensajes y alertas
+│   └── imagenes/           # Recursos visuales
+├── styles.css              # Estilos personalizados
+├── index.html              # Estructura principal de la aplicación
+└── README.md               # Documentación del proyecto
 ```
 
 ---
 
-## 🚀 Funcionalidades Principales
+## Explicación Técnica de la API
 
-- **Selección de canchas**: listado dinámico con filtros por deporte.
-- **Formulario de reserva**:
-  - Validación de fecha futura.
-  - Validación de franja horaria válida.
-  - Bloqueo de reservas duplicadas.
-- **Confirmación de reservas**:
-  - Modales interactivos para confirmar.
-- **Gestión de reservas**:
-  - Estado: **Reservada** / **Cancelada**.
-  - Cancelación mediante modal.
-  **Feedback**
-  - Sección de comentarios
-- **Persistencia local**:
-  - Guardado automático en **localStorage**.
+### API Utilizada: [OpenWeatherMap](https://openweathermap.org/api)
 
----
+Versión gratuita - One Call API 3.0
 
-## 🛠️ Decisiones Técnicas
+#### Endpoint principal:
 
-- **Framework CSS:** **Bootstrap 5** para un diseño responsivo y componentes reutilizables.
-- **Persistencia:** `localStorage` simula una base de datos.
-- **Datos iniciales:** Cargados desde archivos `JSON` mediante `fetch()`.
-- **Validaciones:** Implementadas con **JavaScript puro**, sin librerías externas.
-- **Feedbacks:** Uso de **toasts** y **alerts** de Bootstrap para informar al usuario.
+```bash
+https://api.openweathermap.org/data/2.5/weather?q={CITY_NAME}&appid={API_KEY}&units=metric&lang=es
+```
 
----
+#### Parámetros utilizados:
 
-## 📚 Datos de Ejemplo
+| Parámetro - Descripción                                
+| --------- - ------------------------------------------ 
+| `q`       : Nombre de la ciudad (ejemplo: Santiago)    
+| `appid`   : Clave personal de la API (API Key)         
+| `units`   : Unidades de medida (`metric` para Celsius) 
+| `lang`    : Idioma de respuesta (`es` para español)    
 
-**canchas.json**
+#### Ejemplo de Request:
+
+```bash
+GET https://api.openweathermap.org/data/2.5/weather?q=Santiago&appid=TU_API_KEY&units=metric&lang=es
+```
+
+#### Ejemplo de Response:
+
 ```json
-[
- {
-    "id": "CAN-01",
-    "nombre": "Cancha de Fútbol 1",
-    "deporte": "futbol",
-    "imagen": "imagenes/chancha-futbol.png",
-    "color": "#28a745"
-  },
-  {
-    "id": "CAN-02",
-    "nombre": "Cancha de Fútbol 2",
-    "deporte": "futbol",
-    "imagen": "imagenes/chancha-futbol.png",
-    "color": "#28a745"
-  },
-  {
-    "id": "CAN-03",
-    "nombre": "Cancha de Fútbol 3",
-    "deporte": "futbol",
-    "imagen": "imagenes/chancha-futbol.png",
-    "color": "#28a745"
-  }
-]
+{
+  "coord": { "lon": -70.65, "lat": -33.45 },
+  "weather": [ { "main": "Clouds", "description": "nublado" } ],
+  "main": { "temp": 21.4, "humidity": 68 },
+  "wind": { "speed": 3.6 },
+  "name": "Santiago"
+}
 ```
 
-**reservas.json**
-```json
-[
-  {
-    "id": "R001",
-    "usuario": "Carlos Díaz",
-    "canchaId": "CAN-01",
-    "fecha": "2025-09-01",
-    "hora": "18:00",
-    "estado": "Reservada"
-  },
-  {
-    "id": "R002",
-    "usuario": "María López",
-    "canchaId": "CAN-02",
-    "fecha": "2025-09-02",
-    "hora": "16:00",
-    "estado": "Reservada"
-  },
-  {
-    "id": "R003",
-    "usuario": "José Pérez",
-    "canchaId": "CAN-03",
-    "fecha": "2025-09-03",
-    "hora": "19:00",
-    "estado": "Cancelada"
-  }
-]
-```
+#### Manejo de Errores y Carga:
+
+* Si la API no responde o devuelve un error, se muestra un mensaje de alerta usando Bootstrap.
+* Durante la carga, se muestra un spinner o texto de *"Obteniendo clima..."*.
+* Si no se encuentra la ciudad, se muestra *"No se pudieron obtener los datos del clima."*.
 
 ---
 
-## 👨‍💻 Funciones JavaScript Implementadas
+## Integración del Clima en la Aplicación
 
-- `obtenerNombreCanchaPorId()` → Devuelve el nombre de una cancha según su ID.
-- `obtenerIdCanchaPorNombre()` → Obtiene el ID de una cancha por su nombre.
-- `showPage()` → Controla el cambio entre páginas/vistas.
-- `cargarCanchasDesdeJSON()` → Carga las canchas desde `canchas.json`.
-- `cargarReservasDesdeJSON()` → Carga las reservas iniciales desde `reservas.json`.
-- `renderizarCanchas()` → Renderiza tarjetas dinámicas de canchas.
-- `generateTimeOptions()` → Genera opciones automáticas de horarios.
-- `cargarReservas()` → Muestra las reservas actuales y actualiza la interfaz.
+* En la vista de reserva de canchas, la aplicación consulta automáticamente el clima actual de la ciudad configurada.
+* Los datos mostrados incluyen:
+
+  * **Temperatura actual** (en Celsius)
+  * **Condición general** (nublado, soleado, lluvia, etc.)
+  * **Humedad y viento**
+* Esta información aparece en la parte superior de la vista, antes de confirmar la reserva.
+
+### **Ejemplo de visualización:**
+
+> Clima actual: 23°C, Cielo despejado, Humedad 60%, Viento 4 m/s.
+
+---
+
+## Aporte de la API al Proyecto
+
+El uso de la API OpenWeatherMap aporta valor directo al usuario al permitirle conocer las condiciones climáticas antes de reservar una cancha, lo que mejora la experiencia de uso y simula una aplicación real conectada a datos externos.
+
+Además, demuestra la capacidad del equipo para integrar datos en tiempo real mediante un servicio REST y aplicar buenas prácticas de desarrollo frontend.
+
+---
+
+## Uso de Inteligencia Artificial en el Desarrollo
+
+Durante el desarrollo, se utilizó ChatGPT y Copilot (integrado en Visual Studio Code) como asistente para:
+
+* Integrar correctamente el framework **Vue.js** al proyecto existente.
+* Solucionar errores de selección de cancha y navegación entre vistas.
+* Agregar la funcionalidad de la **API del clima (OpenWeatherMap)** a la vista de reservas.
+* Optimizar la validación de formularios y mejorar la retroalimentación visual.
+
+---
+
+## Ejecución del Proyecto
+
+> *Actualmente el proyecto se ejecuta localmente.*
+> *Puede abrirse mediante Live Server o configurarse para Vue CLI/Vite según las dependencias utilizadas.*
+
+1. Clonar el repositorio:
+
+```bash
+git clone https://github.com/usuario/CasoCanchas-Vue.git
+```
+
+2. Abrir el proyecto en Visual Studio Code.
+3. Ejecutar con Live Server o configurar entorno Vue si aplica.
+
 
 ---
 
 
-## 👥 Autores
+## Autores
 
 - **Pablo Sepúlveda Ulloa**
 - **Nicolás Torres Diaz**
