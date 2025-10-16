@@ -1,16 +1,16 @@
-# Proyecto: Reservas de Canchas con Vue.js y API del Clima (OpenWeatherMap)
+# Proyecto: Reservas de Canchas con Vue.js y API del Clima (Open-Meteo)
 
 > **Asignatura:** Desarrollo Web y Móvil
 > **Integrantes:** Bastián Oyanadel, Pablo Sepúlveda, Nicolás Torres, Benjamín Vivanco
 > **Framework:** Vue.js
-> **API utilizada:** OpenWeatherMap (versión gratuita)
+> **API utilizada:** Open-Meteo (versión gratuita)
 > **Apoyo de IA:** Desarrollo asistido por Inteligencia Artificial (ChatGPT / VSCode Copilot)
 
 ---
 
 ## Descripción General
 
-Este proyecto extiende el proyecto original de reservas de canchas deportivas, integrando ahora el framework Vue.js para una mejor organización del frontend y el consumo de una API externa (OpenWeatherMap) que permite mostrar el clima actual en la vista de reservas.
+Este proyecto extiende el prototipo original de reservas de canchas deportivas, integrando ahora el framework **Vue.js** para una mejor organización del frontend y el consumo de una API externa (Open-Meteo) que permite mostrar el clima actual en la vista de reservas.
 
 El objetivo es ofrecer una experiencia más completa al usuario, mostrando las condiciones climáticas del día antes de confirmar la reserva, ayudando a tomar decisiones informadas según el clima.
 
@@ -18,9 +18,10 @@ El objetivo es ofrecer una experiencia más completa al usuario, mostrando las c
 
 ## Tecnologías y Herramientas
 
+| Herramienta             - Uso principal                                                                                   
 | **Vue.js 3**            : Framework frontend para estructurar componentes y gestionar el estado de la app.                
 | **Bootstrap 5**         : Framework de CSS para estilos responsivos, modales y componentes visuales.                      
-| **OpenWeatherMap API**  : Fuente externa de datos meteorológicos en tiempo real.                                          
+| **Open-Meteo API**      : Fuente externa de datos meteorológicos en tiempo real.                                          
 | **JavaScript (ES6)**    : Lógica funcional para manejo de datos y eventos.                                                
 | **JSON / LocalStorage** : Persistencia local de reservas y canchas.                                                       
 | **Visual Studio Code**  : Entorno de desarrollo.                                                                          
@@ -48,40 +49,41 @@ CasoCanchasVue/
 
 ## Explicación Técnica de la API
 
-### API Utilizada: [OpenWeatherMap](https://openweathermap.org/api)
-
-Versión gratuita - One Call API 3.0
+### API Utilizada: [Open-Meteo](https://open-meteo.com/)
 
 #### Endpoint principal:
 
 ```bash
-https://api.openweathermap.org/data/2.5/weather?q={CITY_NAME}&appid={API_KEY}&units=metric&lang=es
+https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LON}&current_weather=true
 ```
 
-#### Parámetros utilizados:
+#### **Parámetros utilizados:**
 
-| Parámetro - Descripción                                
-| --------- - ------------------------------------------ 
-| `q`       : Nombre de la ciudad (ejemplo: Santiago)    
-| `appid`   : Clave personal de la API (API Key)         
-| `units`   : Unidades de medida (`metric` para Celsius) 
-| `lang`    : Idioma de respuesta (`es` para español)    
+| `latitude`        : Latitud de la ubicación (por ejemplo: -33.45 para Santiago).  
+| `longitude`       : Longitud de la ubicación (por ejemplo: -70.65 para Santiago). 
+| `current_weather` : Si se establece en `true`, devuelve el clima actual.          
 
-#### Ejemplo de Request:
+#### **Ejemplo de Request:**
 
 ```bash
-GET https://api.openweathermap.org/data/2.5/weather?q=Santiago&appid=TU_API_KEY&units=metric&lang=es
+GET https://api.open-meteo.com/v1/forecast?latitude=-33.45&longitude=-70.65&current_weather=true
 ```
 
 #### Ejemplo de Response:
 
 ```json
 {
-  "coord": { "lon": -70.65, "lat": -33.45 },
-  "weather": [ { "main": "Clouds", "description": "nublado" } ],
-  "main": { "temp": 21.4, "humidity": 68 },
-  "wind": { "speed": 3.6 },
-  "name": "Santiago"
+  "latitude": -33.45,
+  "longitude": -70.65,
+  "generationtime_ms": 0.193,
+  "utc_offset_seconds": -10800,
+  "current_weather": {
+    "temperature": 22.3,
+    "windspeed": 3.7,
+    "winddirection": 250,
+    "weathercode": 1,
+    "time": "2025-10-14T15:00"
+  }
 }
 ```
 
@@ -89,41 +91,39 @@ GET https://api.openweathermap.org/data/2.5/weather?q=Santiago&appid=TU_API_KEY&
 
 * Si la API no responde o devuelve un error, se muestra un mensaje de alerta usando Bootstrap.
 * Durante la carga, se muestra un spinner o texto de *"Obteniendo clima..."*.
-* Si no se encuentra la ciudad, se muestra *"No se pudieron obtener los datos del clima."*.
+* Si los datos no están disponibles, se muestra *"No se pudieron obtener los datos del clima."*.
 
 ---
 
 ## Integración del Clima en la Aplicación
 
-* En la vista de reserva de canchas, la aplicación consulta automáticamente el clima actual de la ciudad configurada.
+* En la vista de reserva de canchas, la aplicación consulta automáticamente el clima actual de la ubicación configurada.
 * Los datos mostrados incluyen:
 
-  * **Temperatura actual** (en Celsius)
-  * **Condición general** (nublado, soleado, lluvia, etc.)
-  * **Humedad y viento**
+  * Temperatura actual (en °C)
+  * Velocidad del viento (m/s)
+  * Condición general (interpretada según código de clima de Open-Meteo)
 * Esta información aparece en la parte superior de la vista, antes de confirmar la reserva.
 
-### **Ejemplo de visualización:**
+### Ejemplo de visualización:
 
-> Clima actual: 23°C, Cielo despejado, Humedad 60%, Viento 4 m/s.
+> Clima actual: 22°C, Viento 3.7 m/s.
 
 ---
 
 ## Aporte de la API al Proyecto
 
-El uso de la API OpenWeatherMap aporta valor directo al usuario al permitirle conocer las condiciones climáticas antes de reservar una cancha, lo que mejora la experiencia de uso y simula una aplicación real conectada a datos externos.
-
-Además, demuestra la capacidad del equipo para integrar datos en tiempo real mediante un servicio REST y aplicar buenas prácticas de desarrollo frontend.
+El uso de la API Open-Meteo aporta valor directo al usuario al permitirle conocer las condiciones climáticas actuales antes de reservar una cancha, mejorando la experiencia de uso y demostrando la integración de datos en tiempo real mediante una API REST.
 
 ---
 
 ## Uso de Inteligencia Artificial en el Desarrollo
 
-Durante el desarrollo, se utilizó ChatGPT y Copilot (integrado en Visual Studio Code) como asistente para:
+Durante el desarrollo, se utilizó ChatGPT y Copilot (integrados en Visual Studio Code) como asistencia técnica para:
 
-* Integrar correctamente el framework **Vue.js** al proyecto existente.
-* Solucionar errores de selección de cancha y navegación entre vistas.
-* Agregar la funcionalidad de la **API del clima (OpenWeatherMap)** a la vista de reservas.
+* Integrar correctamente Vue.js al proyecto existente.
+* Resolver errores de selección de cancha y navegación.
+* Agregar la funcionalidad de la API del clima (Open-Meteo) a la vista de reservas.
 * Optimizar la validación de formularios y mejorar la retroalimentación visual.
 
 ---
@@ -142,15 +142,11 @@ git clone https://github.com/usuario/CasoCanchas-Vue.git
 2. Abrir el proyecto en Visual Studio Code.
 3. Ejecutar con Live Server o configurar entorno Vue si aplica.
 
-
 ---
-
 
 ## Autores
 
-- **Pablo Sepúlveda Ulloa**
-- **Nicolás Torres Diaz**
-- **Benjamín Vivanco Guerra**
-- **Bastián Oyanadel Pizarro**
-
----
+* **Pablo Sepúlveda Ulloa**
+* **Nicolás Torres Díaz**
+* **Benjamín Vivanco Guerra**
+* **Bastián Oyanadel Pizarro**
