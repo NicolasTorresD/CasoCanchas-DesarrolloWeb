@@ -82,17 +82,13 @@ La integración se realiza con `fetch()` directamente desde el frontend.
 ``bash
   https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LON}&current_weather=true
 
-
----
-
-
-## Datos utilizados:
+**Datos utilizados:**
 
 - Temperatura actual (temperature)
 - Velocidad del viento (windspeed)
 - Código del clima (weathercode), convertido en texto (“Soleado”, “Nublado”, “Lluvia ligera”, etc.)
 
-## Manejo de errores:
+**Manejo de errores:**
 
 - Si la API no responde, la aplicación muestra un aviso como:
   - “No se pudieron obtener los datos del clima. Intente nuevamente más tarde.”
@@ -108,7 +104,7 @@ Esta integración permite que el usuario considere las condiciones climáticas a
 
 El código está dividido en partes claras que separan la lógica de la interfaz, la persistencia de datos y el consumo de la API.
 
-# index.html
+**index.html**
 
   - Define la estructura principal de la página.
 
@@ -116,7 +112,7 @@ El código está dividido en partes claras que separan la lógica de la interfaz
 
   - Importa los scripts de Bootstrap, el archivo principal app.js y los estilos CSS personalizados.
 
-# app.js
+**app.js**
 
 Contiene toda la lógica funcional del sitio. Se destacan las siguientes funciones principales:
 
@@ -128,13 +124,13 @@ Función -	Descripción
   - obtenerClima()	: Realiza la petición a la API de Open-Meteo y muestra la información del clima.
   - mostrarToast() / mostrarModal()	Muestra mensajes y confirmaciones usando Bootstrap.
 
-# canchas.json / reservas.json
+**canchas.json / reservas.json**
 
 - Archivos de ejemplo que contienen la información inicial del sistema.
 - canchas.json define el listado de canchas disponibles.
 - reservas.json entrega un formato inicial para pruebas.
 
-# styles.css
+**styles.css**
 
 - Contiene los estilos personalizados que complementan Bootstrap.
 - Se definen colores, espaciados y tamaños específicos para mantener coherencia visual.
@@ -173,10 +169,10 @@ La IA fue utilizada como una herramienta de asistencia técnica y aprendizaje, n
 
 ## 👥 Autores
 
-# Bastián Oyanadel
-# Pablo Sepúlveda
-# Nicolás Torres
-# Benjamín Vivanco
+- **Bastián Oyanadel**
+- **Pablo Sepúlveda**
+- **Nicolás Torres**
+- **Benjamín Vivanco**
 
 
 ---
