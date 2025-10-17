@@ -1,410 +1,818 @@
-# 🏟️ Club Deportivo - Sistema de Reserva de Canchas
+# 🏟️ Club Deportivo - Sistema de Reserva de Canchas# 🏟️ Club Deportivo - Sistema de Reserva de Canchas
 
-# Proyecto: Reservas de Canchas con Vue.js y API del Clima (Open-Meteo)
 
-Sistema web moderno para la gestión y reserva de canchas deportivas, desarrollado con Vue 3 y Vite. Permite a los usuarios reservar canchas, dejar reseñas y consultar información meteorológica para planificar mejor sus actividades deportivas.
 
----
+Sistema web moderno para la gestión y reserva de canchas deportivas, desarrollado con Vue 3 y Vite. Permite a los usuarios reservar canchas, dejar reseñas y consultar información meteorológica para planificar mejor sus actividades deportivas.# Proyecto: Reservas de Canchas con Vue.js y API del Clima (Open-Meteo)
+
+
+
+> **Asignatura:** Desarrollo Web y Móvil  Sistema web moderno para la gestión y reserva de canchas deportivas, desarrollado con Vue 3 y Vite. Permite a los usuarios reservar canchas, dejar reseñas y consultar información meteorológica para planificar mejor sus actividades deportivas.
+
+> **Integrantes:** Bastián Oyanadel, Pablo Sepúlveda, Nicolás Torres, Benjamín Vivanco  
+
+> **Framework:** Vue.js 3  ---
+
+> **Apoyo de IA:** GitHub Copilot
 
 ![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=flat&logo=vue.js)
 
-![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat&logo=vite)
+![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=flat&logo=vue.js)
+
+![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat&logo=vite)![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat&logo=vite)
 
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=flat&logo=bootstrap)
 
-## Descripción General
+![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=flat&logo=bootstrap)
 
-Este proyecto extiende el prototipo original de reservas de canchas deportivas, integrando ahora el framework **Vue.js** para una mejor organización del frontend y el consumo de una API externa (Open-Meteo) que permite mostrar el clima actual en la vista de reservas.
+---
+
+## Descripción General
 
 ## 📋 Tabla de Contenidos
 
-El objetivo es ofrecer una experiencia más completa al usuario, mostrando las condiciones climáticas del día antes de confirmar la reserva, ayudando a tomar decisiones informadas según el clima.
+Este proyecto extiende el prototipo original de reservas de canchas deportivas, integrando ahora el framework **Vue.js** para una mejor organización del frontend y el consumo de una API externa (Open-Meteo) que permite mostrar el clima actual en la vista de reservas.
 
 - [Características](#-características)
 
-- [Tecnologías](#️-tecnologías)---
+- [Tecnologías](#️-tecnologías)## 📋 Tabla de Contenidos
 
 - [API Externa - Open-Meteo](#-api-externa---open-meteo)
 
-- [Instalación](#-instalación)## Tecnologías y Herramientas
+- [Instalación](#-instalación)El objetivo es ofrecer una experiencia más completa al usuario, mostrando las condiciones climáticas del día antes de confirmar la reserva, ayudando a tomar decisiones informadas según el clima.
 
 - [Uso](#-uso)
 
-- [Estructura del Proyecto](#-estructura-del-proyecto)| Herramienta             - Uso principal                                                                                   
+- [Estructura del Proyecto](#-estructura-del-proyecto)- [Características](#-características)
 
-- [Contribuir](#-contribuir)| **Vue.js 3**            : Framework frontend para estructurar componentes y gestionar el estado de la app.                
+- [Autores](#-autores)
+
+- [Tecnologías](#️-tecnologías)---
+
+---
+
+- [API Externa - Open-Meteo](#-api-externa---open-meteo)
+
+## ✨ Características
+
+- [Instalación](#-instalación)## Tecnologías y Herramientas
+
+### Funcionalidades Principales
+
+- [Uso](#-uso)
+
+🏟️ **Gestión de Canchas**
+
+- Catálogo de canchas deportivas (Fútbol, Tenis, Pádel)- [Estructura del Proyecto](#-estructura-del-proyecto)| Herramienta             - Uso principal                                                                                   
+
+- Filtrado por deporte y fecha
+
+- Precios en pesos chilenos- [Contribuir](#-contribuir)| **Vue.js 3**            : Framework frontend para estructurar componentes y gestionar el estado de la app.                
+
+- Sistema de calificaciones (1-5 estrellas)
 
 | **Bootstrap 5**         : Framework de CSS para estilos responsivos, modales y componentes visuales.                      
 
-## ✨ Características| **Open-Meteo API**      : Fuente externa de datos meteorológicos en tiempo real.                                          
+📅 **Sistema de Reservas**
 
-| **JavaScript (ES6)**    : Lógica funcional para manejo de datos y eventos.                                                
+- Reservar canchas con nombre, fecha y hora## ✨ Características| **Open-Meteo API**      : Fuente externa de datos meteorológicos en tiempo real.                                          
+
+- Ver todas las reservas activas
+
+- Cancelación automática bloqueada 1 hora antes| **JavaScript (ES6)**    : Lógica funcional para manejo de datos y eventos.                                                
+
+- Validación de fechas y horarios
 
 ### Funcionalidades Principales| **JSON / LocalStorage** : Persistencia local de reservas y canchas.                                                       
 
-| **Visual Studio Code**  : Entorno de desarrollo.                                                                          
+⭐ **Reseñas y Opiniones**
 
-- **📅 Gestión de Reservas**| **ChatGPT / Copilot**   : Asistente de programación para integración de Vue, resolución de errores y conexión con la API. 
+- Calificar canchas con estrellas| **Visual Studio Code**  : Entorno de desarrollo.                                                                          
+
+- Dejar comentarios
+
+- Ver reseñas por cancha (click en estrellas)- **📅 Gestión de Reservas**| **ChatGPT / Copilot**   : Asistente de programación para integración de Vue, resolución de errores y conexión con la API. 
+
+- Promedio de calificaciones
 
   - Reservar canchas deportivas (Fútbol, Tenis, Pádel)
 
-  - Visualizar mis reservas activas---
+🌤️ **Información Meteorológica**
 
-  - Cancelación automática deshabilitada 1 hora antes de la reserva
+- Consulta del clima al hacer reserva  - Visualizar mis reservas activas---
+
+- Pronóstico de 7 días para Santiago, Chile
+
+- Datos históricos disponibles  - Cancelación automática deshabilitada 1 hora antes de la reserva
+
+- Integración con API Open-Meteo
 
   - Validación de fechas y horarios## Estructura del Proyecto
 
+---
 
 
-- **🌤️ Información Meteorológica**```bash
-
-  - Consulta del clima en tiempo real para Santiago, ChileCasoCanchasVue/
-
-  - Pronóstico de 7 días├── app-vue.js              # Lógica principal con Vue.js y consumo de la API del clima
-
-  - Recomendaciones según condiciones climáticas├── app.js                  # Código base original sin framework
-
-  - Integración con API Open-Meteo├── public/
-
-│   ├── canchas.json        # Datos locales de canchas disponibles
-
-- **⭐ Sistema de Reseñas**│   ├── reservas.json       # Datos de reservas iniciales
-
-  - Calificación de canchas (1-5 estrellas)│   ├── feedbacks.json      # Mensajes y alertas
-
-  - Comentarios y opiniones de usuarios│   └── imagenes/           # Recursos visuales
-
-  - Visualización de reseñas por cancha (clickeando en las estrellas)├── styles.css              # Estilos personalizados
-
-  - Promedio de calificaciones├── index.html              # Estructura principal de la aplicación
-
-└── README.md               # Documentación del proyecto
-
-- **🔍 Filtrado Inteligente**```
-
-  - Filtrar canchas por deporte
-
-  - Filtrar por fecha disponible---
-
-  - Precios en pesos chilenos ($CLP)
-
-## Explicación Técnica de la API
 
 ## 🛠️ Tecnologías
 
-### API Utilizada: [Open-Meteo](https://open-meteo.com/)
+- **🌤️ Información Meteorológica**```bash
 
-### Frontend Framework
+| Tecnología | Uso |
 
-- **Vue 3** - Framework JavaScript progresivo#### Endpoint principal:
+|------------|-----|  - Consulta del clima en tiempo real para Santiago, ChileCasoCanchasVue/
 
-- **Vite** - Build tool y dev server de última generación
+| **Vue 3** | Framework JavaScript progresivo |
 
-- **Composition API** - API moderna de Vue para componentes```bash
+| **Vite** | Build tool y servidor de desarrollo |  - Pronóstico de 7 días├── app-vue.js              # Lógica principal con Vue.js y consumo de la API del clima
 
-https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LON}&current_weather=true
+| **Bootstrap 5.3** | Framework CSS responsivo |
 
-### Estilos y UI```
+| **Font Awesome 6** | Biblioteca de iconos |  - Recomendaciones según condiciones climáticas├── app.js                  # Código base original sin framework
 
-- **Bootstrap 5.3** - Framework CSS responsivo
+| **Open-Meteo API** | Datos meteorológicos gratuitos |
 
-- **Font Awesome 6** - Iconos vectoriales#### **Parámetros utilizados:**
-
-- **CSS Custom** - Estilos personalizados con gradientes
-
-| `latitude`        : Latitud de la ubicación (por ejemplo: -33.45 para Santiago).  
-
-### Almacenamiento| `longitude`       : Longitud de la ubicación (por ejemplo: -70.65 para Santiago). 
-
-- **LocalStorage** - Persistencia de datos en el navegador| `current_weather` : Si se establece en `true`, devuelve el clima actual.          
-
-- **JSON** - Formato de datos para canchas, reservas y feedbacks
-
-#### **Ejemplo de Request:**
-
-### API Externa
-
-- **Open-Meteo Weather API** - Datos meteorológicos gratuitos y de código abierto```bash
-
-GET https://api.open-meteo.com/v1/forecast?latitude=-33.45&longitude=-70.65&current_weather=true
-
-## 🌐 API Externa - Open-Meteo```
+| **LocalStorage** | Persistencia de datos |  - Integración con API Open-Meteo├── public/
 
 
 
-### Descripción General#### Ejemplo de Response:
+---│   ├── canchas.json        # Datos locales de canchas disponibles
 
 
 
-Este proyecto consume la **Open-Meteo Weather Forecast API**, una API meteorológica gratuita y de código abierto que no requiere autenticación mediante API key. Proporciona datos climáticos históricos, actuales y pronósticos.```json
+## 🌐 API Externa - Open-Meteo- **⭐ Sistema de Reseñas**│   ├── reservas.json       # Datos de reservas iniciales
+
+
+
+### Descripción  - Calificación de canchas (1-5 estrellas)│   ├── feedbacks.json      # Mensajes y alertas
+
+
+
+Este proyecto consume la **Open-Meteo Weather Forecast API**, una API meteorológica gratuita que no requiere autenticación. Proporciona datos climáticos históricos, actuales y pronósticos.  - Comentarios y opiniones de usuarios│   └── imagenes/           # Recursos visuales
+
+
+
+### Información Técnica  - Visualización de reseñas por cancha (clickeando en las estrellas)├── styles.css              # Estilos personalizados
+
+
+
+#### Endpoint Base  - Promedio de calificaciones├── index.html              # Estructura principal de la aplicación
+
+```
+
+https://api.open-meteo.com/v1/forecast└── README.md               # Documentación del proyecto
+
+```
+
+- **🔍 Filtrado Inteligente**```
+
+#### Autenticación
+
+- ✅ No requiere API key  - Filtrar canchas por deporte
+
+- ✅ Gratuita (10,000 requests/día)
+
+- ✅ CORS habilitado  - Filtrar por fecha disponible---
+
+
+
+#### Parámetros Utilizados  - Precios en pesos chilenos ($CLP)
+
+
+
+| Parámetro | Valor | Descripción |## Explicación Técnica de la API
+
+|-----------|-------|-------------|
+
+| `latitude` | `-33.4489` | Latitud de Santiago, Chile |## 🛠️ Tecnologías
+
+| `longitude` | `-70.6693` | Longitud de Santiago, Chile |
+
+| `timezone` | `America/Santiago` | Zona horaria |### API Utilizada: [Open-Meteo](https://open-meteo.com/)
+
+| `daily` | `temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode` | Variables meteorológicas |
+
+| `forecast_days` | `7` | Días de pronóstico |### Frontend Framework
+
+
+
+#### Ejemplo de Request- **Vue 3** - Framework JavaScript progresivo#### Endpoint principal:
+
+
+
+```javascript- **Vite** - Build tool y dev server de última generación
+
+const url = 'https://api.open-meteo.com/v1/forecast?' +
+
+  'latitude=-33.4489&' +- **Composition API** - API moderna de Vue para componentes```bash
+
+  'longitude=-70.6693&' +
+
+  'daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&' +https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LON}&current_weather=true
+
+  'timezone=America/Santiago&' +
+
+  'forecast_days=7';### Estilos y UI```
+
+
+
+const response = await fetch(url);- **Bootstrap 5.3** - Framework CSS responsivo
+
+const data = await response.json();
+
+```- **Font Awesome 6** - Iconos vectoriales#### **Parámetros utilizados:**
+
+
+
+#### Ejemplo de Response- **CSS Custom** - Estilos personalizados con gradientes
+
+
+
+```json| `latitude`        : Latitud de la ubicación (por ejemplo: -33.45 para Santiago).  
 
 {
 
-### Información Técnica  "latitude": -33.45,
+  "latitude": -33.4489,### Almacenamiento| `longitude`       : Longitud de la ubicación (por ejemplo: -70.65 para Santiago). 
 
-  "longitude": -70.65,
+  "longitude": -70.6693,
 
-#### 🔗 Endpoint Base  "generationtime_ms": 0.193,
+  "timezone": "America/Santiago",- **LocalStorage** - Persistencia de datos en el navegador| `current_weather` : Si se establece en `true`, devuelve el clima actual.          
 
-```  "utc_offset_seconds": -10800,
+  "daily": {
 
-https://api.open-meteo.com/v1/forecast  "current_weather": {
+    "time": ["2025-10-17", "2025-10-18", "2025-10-19"],- **JSON** - Formato de datos para canchas, reservas y feedbacks
 
-```    "temperature": 22.3,
+    "temperature_2m_max": [22.5, 24.1, 23.8],
 
-    "windspeed": 3.7,
+    "temperature_2m_min": [12.3, 13.1, 12.9],#### **Ejemplo de Request:**
 
-#### 🔐 Autenticación    "winddirection": 250,
+    "precipitation_probability_max": [10, 5, 0],
 
-- **Tipo:** No requiere autenticación    "weathercode": 1,
-
-- **API Key:** No es necesaria    "time": "2025-10-14T15:00"
-
-- **Límite de uso:** 10,000 requests/día (uso gratuito)  }
-
-- **CORS:** Habilitado para requests desde navegador}
-
-```
-
-#### 📍 Parámetros Principales
-
-#### Manejo de Errores y Carga:
-
-| Parámetro | Tipo | Descripción | Valor en Proyecto |
-
-|-----------|------|-------------|-------------------|* Si la API no responde o devuelve un error, se muestra un mensaje de alerta usando Bootstrap.
-
-| `latitude` | float | Latitud de la ubicación | `-33.4489` (Santiago) |* Durante la carga, se muestra un spinner o texto de *"Obteniendo clima..."*.
-
-| `longitude` | float | Longitud de la ubicación | `-70.6693` (Santiago) |* Si los datos no están disponibles, se muestra *"No se pudieron obtener los datos del clima."*.
-
-| `daily` | string | Variables meteorológicas diarias | `temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode` |
-
-| `timezone` | string | Zona horaria | `America/Santiago` |---
-
-| `forecast_days` | int | Días de pronóstico (1-16) | `7` |
-
-## Integración del Clima en la Aplicación
-
-#### 📤 Ejemplo de Request
-
-* En la vista de reserva de canchas, la aplicación consulta automáticamente el clima actual de la ubicación configurada.
-
-**Pronóstico de 7 días para Santiago, Chile:*** Los datos mostrados incluyen:
-
-
-
-```javascript  * Temperatura actual (en °C)
-
-const url = 'https://api.open-meteo.com/v1/forecast?' +  * Velocidad del viento (m/s)
-
-  'latitude=-33.4489&' +  * Condición general (interpretada según código de clima de Open-Meteo)
-
-  'longitude=-70.6693&' +* Esta información aparece en la parte superior de la vista, antes de confirmar la reserva.
-
-  'daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&' +
-
-  'timezone=America/Santiago&' +### Ejemplo de visualización:
-
-  'forecast_days=7';
-
-> Clima actual: 22°C, Viento 3.7 m/s.
-
-const response = await fetch(url);
-
-const data = await response.json();---
-
-```
-
-## Aporte de la API al Proyecto
-
-#### 📥 Ejemplo de Response
-
-El uso de la API Open-Meteo aporta valor directo al usuario al permitirle conocer las condiciones climáticas actuales antes de reservar una cancha, mejorando la experiencia de uso y demostrando la integración de datos en tiempo real mediante una API REST.
-
-```json
-
-{---
-
-  "latitude": -33.4489,
-
-  "longitude": -70.6693,## Uso de Inteligencia Artificial en el Desarrollo
-
-  "timezone": "America/Santiago",
-
-  "daily": {Durante el desarrollo, se utilizó ChatGPT y Copilot (integrados en Visual Studio Code) como asistencia técnica para:
-
-    "time": ["2025-10-17", "2025-10-18", "2025-10-19"],
-
-    "temperature_2m_max": [22.5, 24.1, 23.8],* Integrar correctamente Vue.js al proyecto existente.
-
-    "temperature_2m_min": [12.3, 13.1, 12.9],* Resolver errores de selección de cancha y navegación.
-
-    "precipitation_probability_max": [10, 5, 0],* Agregar la funcionalidad de la API del clima (Open-Meteo) a la vista de reservas.
-
-    "weathercode": [1, 0, 2]* Optimizar la validación de formularios y mejorar la retroalimentación visual.
+    "weathercode": [1, 0, 2]### API Externa
 
   }
 
-}---
+}- **Open-Meteo Weather API** - Datos meteorológicos gratuitos y de código abierto```bash
 
 ```
 
-## Ejecución del Proyecto
+GET https://api.open-meteo.com/v1/forecast?latitude=-33.45&longitude=-70.65&current_weather=true
 
-#### 🌦️ Códigos de Clima (Weather Codes)
+#### Códigos de Clima (Weather Codes WMO)
 
-> *Actualmente el proyecto se ejecuta localmente.*
+## 🌐 API Externa - Open-Meteo```
 
-| Código | Descripción | Icono |> *Puede abrirse mediante Live Server o configurarse para Vue CLI/Vite según las dependencias utilizadas.*
+| Código | Descripción | Icono |
 
 |--------|-------------|-------|
 
-| `0-1` | Despejado | ☀️ |1. Clonar el repositorio:
+| 0-1 | Despejado | ☀️ |
+
+| 2-3 | Parcialmente nublado | ⛅ |### Descripción General#### Ejemplo de Response:
+
+| 45-48 | Niebla | 🌫️ |
+
+| 51-55 | Llovizna | 🌦️ |
+
+| 61-65 | Lluvia | 🌧️ |
+
+| 71-77 | Nieve | ❄️ |Este proyecto consume la **Open-Meteo Weather Forecast API**, una API meteorológica gratuita y de código abierto que no requiere autenticación mediante API key. Proporciona datos climáticos históricos, actuales y pronósticos.```json
+
+| 80-82 | Chubascos | 🌧️ |
+
+| 95-99 | Tormenta | ⛈️ |{
+
+
+
+#### Manejo de Errores### Información Técnica  "latitude": -33.45,
+
+
+
+El sistema maneja los siguientes errores:  "longitude": -70.65,
+
+
+
+```javascript#### 🔗 Endpoint Base  "generationtime_ms": 0.193,
+
+// 1. Validación de fecha
+
+if (!fecha) {```  "utc_offset_seconds": -10800,
+
+  return { success: false, error: 'Fecha no válida' };
+
+}https://api.open-meteo.com/v1/forecast  "current_weather": {
+
+
+
+// 2. Error de red```    "temperature": 22.3,
+
+catch (error) {
+
+  return { success: false, error: 'Error al conectar con el servicio' };    "windspeed": 3.7,
+
+}
+
+#### 🔐 Autenticación    "winddirection": 250,
+
+// 3. Datos no disponibles
+
+if (indice === -1) {- **Tipo:** No requiere autenticación    "weathercode": 1,
+
+  return { success: false, error: 'No hay datos para esta fecha' };
+
+}- **API Key:** No es necesaria    "time": "2025-10-14T15:00"
+
+```
+
+- **Límite de uso:** 10,000 requests/día (uso gratuito)  }
+
+#### Integración en el Proyecto
+
+- **CORS:** Habilitado para requests desde navegador}
+
+**Configuración con variables de entorno:**
+
+```
+
+```javascript
+
+// src/services/api.js#### 📍 Parámetros Principales
+
+const CLIMA_CONFIG = {
+
+  baseUrl: import.meta.env.VITE_CLIMA_API_URL,#### Manejo de Errores y Carga:
+
+  latitude: import.meta.env.VITE_CLIMA_LATITUDE,
+
+  longitude: import.meta.env.VITE_CLIMA_LONGITUDE,| Parámetro | Tipo | Descripción | Valor en Proyecto |
+
+  timezone: import.meta.env.VITE_CLIMA_TIMEZONE
+
+};|-----------|------|-------------|-------------------|* Si la API no responde o devuelve un error, se muestra un mensaje de alerta usando Bootstrap.
+
+```
+
+| `latitude` | float | Latitud de la ubicación | `-33.4489` (Santiago) |* Durante la carga, se muestra un spinner o texto de *"Obteniendo clima..."*.
+
+**Archivo `.env`:**
+
+| `longitude` | float | Longitud de la ubicación | `-70.6693` (Santiago) |* Si los datos no están disponibles, se muestra *"No se pudieron obtener los datos del clima."*.
+
+```bash
+
+VITE_CLIMA_API_URL=https://api.open-meteo.com/v1/forecast| `daily` | string | Variables meteorológicas diarias | `temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode` |
+
+VITE_CLIMA_LATITUDE=-33.4489
+
+VITE_CLIMA_LONGITUDE=-70.6693| `timezone` | string | Zona horaria | `America/Santiago` |---
+
+VITE_CLIMA_TIMEZONE=America/Santiago
+
+```| `forecast_days` | int | Días de pronóstico (1-16) | `7` |
+
+
+
+#### Funciones Disponibles## Integración del Clima en la Aplicación
+
+
+
+```javascript#### 📤 Ejemplo de Request
+
+// Obtener clima para una fecha
+
+obtenerClima(fecha: string) → Promise<Object>* En la vista de reserva de canchas, la aplicación consulta automáticamente el clima actual de la ubicación configurada.
+
+
+
+// Descripción en español del código**Pronóstico de 7 días para Santiago, Chile:*** Los datos mostrados incluyen:
+
+obtenerDescripcionClima(codigo: number) → string
+
+
+
+// Emoji según condición climática
+
+obtenerIconoClima(codigo: number) → string```javascript  * Temperatura actual (en °C)
+
+```
+
+const url = 'https://api.open-meteo.com/v1/forecast?' +  * Velocidad del viento (m/s)
+
+#### Aporte a la Experiencia de Usuario
+
+  'latitude=-33.4489&' +  * Condición general (interpretada según código de clima de Open-Meteo)
+
+1. **Al Reservar:** El usuario ve el pronóstico del clima antes de confirmar
+
+2. **Toma de Decisiones:** Ayuda a elegir la mejor fecha según el clima  'longitude=-70.6693&' +* Esta información aparece en la parte superior de la vista, antes de confirmar la reserva.
+
+3. **Visualización Clara:** Iconos y colores según las condiciones
+
+  'daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&' +
+
+#### Consideraciones de CORS
+
+  'timezone=America/Santiago&' +### Ejemplo de visualización:
+
+Open-Meteo tiene CORS habilitado por defecto:
+
+  'forecast_days=7';
+
+```
+
+Access-Control-Allow-Origin: *> Clima actual: 22°C, Viento 3.7 m/s.
+
+Access-Control-Allow-Methods: GET
+
+```const response = await fetch(url);
+
+
+
+No requiere configuración adicional para funcionar desde el navegador.const data = await response.json();---
+
+
+
+#### Límites y Restricciones```
+
+
+
+| Límite | Valor |## Aporte de la API al Proyecto
+
+|--------|-------|
+
+| Requests/día | 10,000 (gratuito) |#### 📥 Ejemplo de Response
+
+| Días de pronóstico | 16 días máximo |
+
+| Datos históricos | Desde 1940 |El uso de la API Open-Meteo aporta valor directo al usuario al permitirle conocer las condiciones climáticas actuales antes de reservar una cancha, mejorando la experiencia de uso y demostrando la integración de datos en tiempo real mediante una API REST.
+
+| Cobertura | Global |
+
+```json
+
+#### Documentación Oficial
+
+{---
+
+- **Docs:** [https://open-meteo.com/en/docs](https://open-meteo.com/en/docs)
+
+- **Playground:** [https://open-meteo.com/en/docs#api-playground](https://open-meteo.com/en/docs#api-playground)  "latitude": -33.4489,
+
+- **GitHub:** [https://github.com/open-meteo/open-meteo](https://github.com/open-meteo/open-meteo)
+
+- **Licencia:** CC BY 4.0  "longitude": -70.6693,## Uso de Inteligencia Artificial en el Desarrollo
+
+
+
+---  "timezone": "America/Santiago",
+
+
+
+## 🚀 Instalación  "daily": {Durante el desarrollo, se utilizó ChatGPT y Copilot (integrados en Visual Studio Code) como asistencia técnica para:
+
+
+
+### Prerrequisitos    "time": ["2025-10-17", "2025-10-18", "2025-10-19"],
+
+
+
+- Node.js 18.x o superior    "temperature_2m_max": [22.5, 24.1, 23.8],* Integrar correctamente Vue.js al proyecto existente.
+
+- npm 9.x o superior
+
+    "temperature_2m_min": [12.3, 13.1, 12.9],* Resolver errores de selección de cancha y navegación.
+
+### Pasos
+
+    "precipitation_probability_max": [10, 5, 0],* Agregar la funcionalidad de la API del clima (Open-Meteo) a la vista de reservas.
+
+1. **Clonar el repositorio**
+
+   ```bash    "weathercode": [1, 0, 2]* Optimizar la validación de formularios y mejorar la retroalimentación visual.
+
+   git clone https://github.com/NicolasTorresD/CasoCanchas-DesarrolloWeb.git
+
+   cd CasoCanchas-DesarrolloWeb  }
+
+   ```
+
+}---
+
+2. **Instalar dependencias**
+
+   ```bash```
+
+   npm install
+
+   ```## Ejecución del Proyecto
+
+
+
+3. **Configurar variables de entorno**#### 🌦️ Códigos de Clima (Weather Codes)
+
+   ```bash
+
+   cp .env.example .env> *Actualmente el proyecto se ejecuta localmente.*
+
+   # La configuración por defecto funciona para Santiago, Chile
+
+   ```| Código | Descripción | Icono |> *Puede abrirse mediante Live Server o configurarse para Vue CLI/Vite según las dependencias utilizadas.*
+
+
+
+4. **Iniciar servidor de desarrollo**|--------|-------------|-------|
+
+   ```bash
+
+   npm run dev| `0-1` | Despejado | ☀️ |1. Clonar el repositorio:
+
+   ```
 
 | `2-3` | Parcialmente nublado | ⛅ |
 
-| `45-48` | Niebla | 🌫️ |```bash
+5. **Abrir en navegador**
 
-| `51-55` | Llovizna | 🌦️ |git clone https://github.com/usuario/CasoCanchas-Vue.git
+   ```| `45-48` | Niebla | 🌫️ |```bash
 
-| `61-65` | Lluvia | 🌧️ |```
+   http://localhost:5173
 
-| `71-77` | Nieve | ❄️ |
-
-| `80-82` | Chubascos | 🌧️ |2. Abrir el proyecto en Visual Studio Code.
-
-| `95-99` | Tormenta | ⛈️ |3. Ejecutar con Live Server o configurar entorno Vue si aplica.
+   ```| `51-55` | Llovizna | 🌦️ |git clone https://github.com/usuario/CasoCanchas-Vue.git
 
 
 
-#### ⚠️ Manejo de Errores---
+---| `61-65` | Lluvia | 🌧️ |```
 
 
 
-El servicio implementa un manejo robusto de errores:## Autores
+## 📖 Uso| `71-77` | Nieve | ❄️ |
 
 
+
+### Comandos| `80-82` | Chubascos | 🌧️ |2. Abrir el proyecto en Visual Studio Code.
+
+
+
+```bash| `95-99` | Tormenta | ⛈️ |3. Ejecutar con Live Server o configurar entorno Vue si aplica.
+
+npm run dev      # Desarrollo con hot-reload
+
+npm run build    # Build de producción
+
+npm run preview  # Previsualizar build
+
+```#### ⚠️ Manejo de Errores---
+
+
+
+### Flujo de Usuario
+
+
+
+#### 1️⃣ Ver CanchasEl servicio implementa un manejo robusto de errores:## Autores
+
+- Filtrar por deporte o fecha
+
+- Ver precios y calificaciones
+
+- Click en estrellas para ver reseñas
 
 ```javascript* **Pablo Sepúlveda Ulloa**
 
-export async function obtenerClima(fecha) {* **Nicolás Torres Díaz**
+#### 2️⃣ Reservar
 
-  try {* **Benjamín Vivanco Guerra**
+- Click en "Reservar"export async function obtenerClima(fecha) {* **Nicolás Torres Díaz**
+
+- Completar nombre, fecha y hora
+
+- Ver pronóstico del clima  try {* **Benjamín Vivanco Guerra**
+
+- Confirmar reserva
 
     const response = await fetch(url);* **Bastián Oyanadel Pizarro**
 
-    
-    // Verificar estado HTTP
-    if (!response.ok) {
+#### 3️⃣ Mis Reservas
+
+- Ver reservas activas    
+
+- Cancelar (hasta 1 hora antes)    // Verificar estado HTTP
+
+- Botón gris si ya no se puede cancelar    if (!response.ok) {
+
       throw new Error(`HTTP Error: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    
-    // Verificar disponibilidad de datos para la fecha
+
+#### 4️⃣ Dejar Opinión    }
+
+- Seleccionar cancha    
+
+- Calificar con estrellas (1-5)    const data = await response.json();
+
+- Escribir comentario    
+
+- Enviar    // Verificar disponibilidad de datos para la fecha
+
     const indice = data.daily.time.indexOf(fecha);
-    if (indice === -1) {
+
+---    if (indice === -1) {
+
       return {
-        success: false,
+
+## 📁 Estructura del Proyecto        success: false,
+
         error: 'No hay datos disponibles para esta fecha'
-      };
-    }
-    
-    // Retornar datos exitosos
-    return {
-      success: true,
-      data: {
-        fecha: fechaBuscada,
-        temperaturaMax: data.daily.temperature_2m_max[indice],
-        temperaturaMin: data.daily.temperature_2m_min[indice],
-        probabilidadPrecipitacion: data.daily.precipitation_probability_max[indice],
-        codigoClima: data.daily.weathercode[indice]
-      }
-    };
-  } catch (error) {
-    console.error('Error obteniendo clima:', error);
-    return {
-      success: false,
-      error: 'Error al conectar con el servicio de clima'
-    };
-  }
-}
-```
 
-**Casos de error manejados:**
-1. ❌ Error de red / timeout
-2. ❌ Respuesta HTTP no exitosa (4xx, 5xx)
-3. ❌ Datos no disponibles para la fecha solicitada
+```      };
+
+CasoCanchas-DesarrolloWeb/    }
+
+│    
+
+├── public/                   # Archivos estáticos    // Retornar datos exitosos
+
+│   ├── canchas.json         # Datos de canchas    return {
+
+│   ├── reservas.json        # Reservas iniciales      success: true,
+
+│   ├── feedbacks.json       # Reseñas iniciales      data: {
+
+│   └── imagenes/            # Imágenes        fecha: fechaBuscada,
+
+│        temperaturaMax: data.daily.temperature_2m_max[indice],
+
+├── src/        temperaturaMin: data.daily.temperature_2m_min[indice],
+
+│   ├── components/          # Componentes Vue        probabilidadPrecipitacion: data.daily.precipitation_probability_max[indice],
+
+│   │   ├── ListadoCanchas.vue        codigoClima: data.daily.weathercode[indice]
+
+│   │   ├── MisReservas.vue      }
+
+│   │   ├── FormularioFeedback.vue    };
+
+│   │   └── ModalReserva.vue  } catch (error) {
+
+│   │    console.error('Error obteniendo clima:', error);
+
+│   ├── services/            # Lógica de negocio    return {
+
+│   │   └── api.js          # Servicio de API      success: false,
+
+│   │      error: 'Error al conectar con el servicio de clima'
+
+│   ├── App.vue             # Componente raíz    };
+
+│   └── main.js             # Punto de entrada  }
+
+│}
+
+├── .env                     # Variables de entorno (no en git)```
+
+├── .env.example            # Plantilla de configuración
+
+├── package.json            # Dependencias**Casos de error manejados:**
+
+├── vite.config.js          # Configuración Vite1. ❌ Error de red / timeout
+
+└── README.md               # Este archivo2. ❌ Respuesta HTTP no exitosa (4xx, 5xx)
+
+```3. ❌ Datos no disponibles para la fecha solicitada
+
 4. ❌ Error al parsear JSON
-5. ❌ Parámetros inválidos
 
-#### 🎯 Casos de Uso en la Aplicación
+### Descripción de Componentes5. ❌ Parámetros inválidos
 
-1. **Consulta al Reservar**
-   - El usuario selecciona una fecha para reservar
+
+
+**ListadoCanchas.vue**#### 🎯 Casos de Uso en la Aplicación
+
+- Lista de canchas con filtros
+
+- Modal de reseñas1. **Consulta al Reservar**
+
+- Calificaciones promedio   - El usuario selecciona una fecha para reservar
+
    - El sistema consulta automáticamente el clima previsto
-   - Se muestra temperatura, probabilidad de lluvia y condiciones
 
-2. **Recomendaciones Inteligentes**
-   - Si hay alta probabilidad de lluvia (>60%), se advierte al usuario
+**MisReservas.vue**   - Se muestra temperatura, probabilidad de lluvia y condiciones
+
+- Gestión de reservas
+
+- Validación de cancelación2. **Recomendaciones Inteligentes**
+
+- Formato de fechas   - Si hay alta probabilidad de lluvia (>60%), se advierte al usuario
+
    - Se sugiere cambiar de fecha si las condiciones son desfavorables
-   - Icono visual del clima para referencia rápida
 
-3. **Datos Históricos**
-   - Para fechas pasadas, muestra el clima real registrado
+**FormularioFeedback.vue**   - Icono visual del clima para referencia rápida
+
+- Formulario de reseñas
+
+- Selector de estrellas3. **Datos Históricos**
+
+- Vista previa de opiniones   - Para fechas pasadas, muestra el clima real registrado
+
    - Útil para análisis y referencia
 
-#### 🔄 Consideraciones de CORS
+**ModalReserva.vue**
 
-La API Open-Meteo tiene **CORS habilitado**, permitiendo requests directos desde el navegador sin necesidad de un proxy backend.
+- Modal para reservar#### 🔄 Consideraciones de CORS
 
-```javascript
-// Headers permitidos por Open-Meteo
-Access-Control-Allow-Origin: *
-Access-Control-Allow-Methods: GET
+- Integración con clima
+
+- ValidacionesLa API Open-Meteo tiene **CORS habilitado**, permitiendo requests directos desde el navegador sin necesidad de un proxy backend.
+
+
+
+**api.js**```javascript
+
+- Llamadas a API Open-Meteo// Headers permitidos por Open-Meteo
+
+- Manejo de LocalStorageAccess-Control-Allow-Origin: *
+
+- Funciones de helpersAccess-Control-Allow-Methods: GET
+
 Access-Control-Allow-Headers: Content-Type
-```
 
-Esto permite llamadas directas desde el frontend sin configuración adicional.
+---```
 
-#### 📊 Límites y Restricciones
 
-| Límite | Valor | Notas |
-|--------|-------|-------|
+
+## 👥 AutoresEsto permite llamadas directas desde el frontend sin configuración adicional.
+
+
+
+- **Bastián Oyanadel**#### 📊 Límites y Restricciones
+
+- **Pablo Sepúlveda**
+
+- **Nicolás Torres** - [GitHub](https://github.com/NicolasTorresD)| Límite | Valor | Notas |
+
+- **Benjamín Vivanco**|--------|-------|-------|
+
 | Requests/día | 10,000 | Uso gratuito, suficiente para proyectos educativos |
-| Requests/segundo | Sin límite estricto | ~600 req/s |
+
+---| Requests/segundo | Sin límite estricto | ~600 req/s |
+
 | Días de pronóstico | 16 días | Máximo hacia el futuro |
-| Datos históricos | Desde 1940 | Dependiendo de la ubicación |
+
+## 📄 Licencia| Datos históricos | Desde 1940 | Dependiendo de la ubicación |
+
 | Ubicaciones | Ilimitadas | Cobertura global |
-| Caching recomendado | 15 minutos | Para optimizar rendimiento |
 
-#### 🔗 Documentación y Recursos
+Este proyecto es un trabajo académico para la asignatura de Desarrollo Web y Móvil.| Caching recomendado | 15 minutos | Para optimizar rendimiento |
 
-- **Documentación oficial:** [https://open-meteo.com/en/docs](https://open-meteo.com/en/docs)
+
+
+---#### 🔗 Documentación y Recursos
+
+
+
+## 🙏 Agradecimientos- **Documentación oficial:** [https://open-meteo.com/en/docs](https://open-meteo.com/en/docs)
+
 - **API Playground:** [https://open-meteo.com/en/docs#api-playground](https://open-meteo.com/en/docs#api-playground)
-- **GitHub:** [https://github.com/open-meteo/open-meteo](https://github.com/open-meteo/open-meteo)
-- **Licencia:** CC BY 4.0 (Atribución requerida)
 
-### Integración en el Proyecto
+- [Vue.js](https://vuejs.org/)- **GitHub:** [https://github.com/open-meteo/open-meteo](https://github.com/open-meteo/open-meteo)
 
-#### Configuración Centralizada
+- [Vite](https://vitejs.dev/)- **Licencia:** CC BY 4.0 (Atribución requerida)
 
-La API está integrada mediante un servicio dedicado en `src/services/api.js` utilizando variables de entorno:
+- [Bootstrap](https://getbootstrap.com/)
 
-```javascript
+- [Open-Meteo](https://open-meteo.com/)### Integración en el Proyecto
+
+- [Font Awesome](https://fontawesome.com/)
+
+- GitHub Copilot#### Configuración Centralizada
+
+
+
+---La API está integrada mediante un servicio dedicado en `src/services/api.js` utilizando variables de entorno:
+
+
+
+## ✅ Cumplimiento de Requisitos```javascript
+
 // src/services/api.js
-const CLIMA_CONFIG = {
-  baseUrl: import.meta.env.VITE_CLIMA_API_URL || 'https://api.open-meteo.com/v1/forecast',
-  latitude: import.meta.env.VITE_CLIMA_LATITUDE || -33.4489,
-  longitude: import.meta.env.VITE_CLIMA_LONGITUDE || -70.6693,
-  timezone: import.meta.env.VITE_CLIMA_TIMEZONE || 'America/Santiago'
-};
-```
+
+| Requisito | Estado |const CLIMA_CONFIG = {
+
+|-----------|--------|  baseUrl: import.meta.env.VITE_CLIMA_API_URL || 'https://api.open-meteo.com/v1/forecast',
+
+| Framework Frontend | ✅ Vue 3 |  latitude: import.meta.env.VITE_CLIMA_LATITUDE || -33.4489,
+
+| API Externa | ✅ Open-Meteo |  longitude: import.meta.env.VITE_CLIMA_LONGITUDE || -70.6693,
+
+| Documentación Técnica API | ✅ Completa |  timezone: import.meta.env.VITE_CLIMA_TIMEZONE || 'America/Santiago'
+
+| Aporte a UX | ✅ Clima al reservar |};
+
+| Buenas Prácticas | ✅ Componentes + servicios |```
+
+| README completo | ✅ Este documento |
 
 #### Variables de Entorno
 
+---
+
 En el archivo `.env`:
+
+**Desarrollado con ❤️ usando Vue.js**
 
 ```bash
 # API de Clima - Open Meteo
