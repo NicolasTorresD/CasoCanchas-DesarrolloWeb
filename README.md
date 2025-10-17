@@ -1,26 +1,28 @@
-# 🏟️ Club Deportivo - Sistema de Reserva de Canchas# Proyecto: Reservas de Canchas con Vue.js y API del Clima (Open-Meteo)
+# 🏟️ Club Deportivo - Sistema de Reserva de Canchas
 
+# Proyecto: Reservas de Canchas con Vue.js y API del Clima (Open-Meteo)
 
-
-Sistema web moderno para la gestión y reserva de canchas deportivas, desarrollado con Vue 3 y Vite. Permite a los usuarios reservar canchas, dejar reseñas y consultar información meteorológica para planificar mejor sus actividades deportivas.> **Asignatura:** Desarrollo Web y Móvil
+Sistema web moderno para la gestión y reserva de canchas deportivas, desarrollado con Vue 3 y Vite. Permite a los usuarios reservar canchas, dejar reseñas y consultar información meteorológica para planificar mejor sus actividades deportivas.
 
 > **Integrantes:** Bastián Oyanadel, Pablo Sepúlveda, Nicolás Torres, Benjamín Vivanco
 
-> **Asignatura:** Desarrollo Web y Móvil  > **Framework:** Vue.js
+> **Asignatura:** Desarrollo Web y Móvil
 
-> **Integrantes:** Bastián Oyanadel, Pablo Sepúlveda, Nicolás Torres, Benjamín Vivanco  > **API utilizada:** Open-Meteo (versión gratuita)
+> **Framework:** Vue.js
 
-> **Framework:** Vue.js 3  > **Apoyo de IA:** Desarrollo asistido por Inteligencia Artificial (ChatGPT / VSCode Copilot)
+> **Integrantes:** Bastián Oyanadel, Pablo Sepúlveda, Nicolás Torres, Benjamín Vivanco
 
-> **Apoyo de IA:** Desarrollo asistido por GitHub Copilot
+> **API utilizada:** Open-Meteo (versión gratuita)
 
 ---
 
 ![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=flat&logo=vue.js)
 
-![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat&logo=vite)## Descripción General
+![Vite](https://img.shields.io/badge/Vite-5.x-646CFF?style=flat&logo=vite)
 
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=flat&logo=bootstrap)
+
+## Descripción General
 
 Este proyecto extiende el prototipo original de reservas de canchas deportivas, integrando ahora el framework **Vue.js** para una mejor organización del frontend y el consumo de una API externa (Open-Meteo) que permite mostrar el clima actual en la vista de reservas.
 
