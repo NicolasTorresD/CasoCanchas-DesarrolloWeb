@@ -3,9 +3,9 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="#">
+        <span class="navbar-brand fw-bold" style="cursor: default;">
           <i class="fas fa-futbol me-2"></i>Club Deportivo
-        </a>
+        </span>
         <button 
           class="navbar-toggler" 
           type="button" 
@@ -246,9 +246,14 @@ function confirmarCancelacion() {
 
 // Gestión de feedbacks
 function agregarFeedback(nuevoFeedback) {
+  const fechaActual = new Date();
+  const fechaFormateada = fechaActual.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+  
   const feedbackCompleto = {
     id: Date.now().toString(),
-    ...nuevoFeedback
+    ...nuevoFeedback,
+    fecha: fechaFormateada,
+    timestamp: fechaActual.toISOString()
   };
   
   console.log('💬 Nuevo feedback agregado:', feedbackCompleto);

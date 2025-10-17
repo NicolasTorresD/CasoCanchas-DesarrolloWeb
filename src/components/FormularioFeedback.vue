@@ -78,7 +78,12 @@
                 class="feedback-item mb-3 p-3 border rounded"
               >
                 <div class="d-flex justify-content-between align-items-start mb-2">
-                  <strong>{{ feedback.usuario }}</strong>
+                  <div>
+                    <strong>{{ feedback.usuario }}</strong>
+                    <small class="text-muted d-block">
+                      <i class="fas fa-calendar me-1"></i>{{ formatearFecha(feedback.fecha) }}
+                    </small>
+                  </div>
                   <div class="calificacion-mostrar">
                     <span v-html="generarEstrellas(feedback.calificacion)"></span>
                   </div>
@@ -149,6 +154,12 @@ function generarEstrellas(calificacion) {
     }
   }
   return estrellas;
+}
+
+function formatearFecha(fecha) {
+  if (!fecha) return 'Fecha no disponible';
+  const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+  return new Date(fecha).toLocaleDateString('es-ES', opciones);
 }
 </script>
 

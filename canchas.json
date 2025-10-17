@@ -4,104 +4,119 @@
     "nombre": "Cancha de Fútbol 1",
     "deporte": "futbol",
     "imagen": "imagenes/chancha-futbol.png",
-    "color": "#28a745"
+    "color": "#28a745",
+    "precio": 25
   },
   {
     "id": "CAN-02",
     "nombre": "Cancha de Fútbol 2",
     "deporte": "futbol",
     "imagen": "imagenes/chancha-futbol.png",
-    "color": "#28a745"
+    "color": "#28a745",
+    "precio": 30
   },
   {
     "id": "CAN-03",
     "nombre": "Cancha de Fútbol 3",
     "deporte": "futbol",
     "imagen": "imagenes/chancha-futbol.png",
-    "color": "#28a745"
+    "color": "#28a745",
+    "precio": 35
   },
   {
     "id": "CAN-04",
     "nombre": "Cancha de Fútbol 4",
     "deporte": "futbol",
     "imagen": "imagenes/chancha-futbol.png",
-    "color": "#28a745"
+    "color": "#28a745",
+    "precio": 28
   },
   {
     "id": "CAN-05",
     "nombre": "Cancha de Fútbol 5",
     "deporte": "futbol",
     "imagen": "imagenes/chancha-futbol.png",
-    "color": "#28a745"
+    "color": "#28a745",
+    "precio": 32
   },
   {
     "id": "CAN-06",
     "nombre": "Cancha de Tenis 1",
     "deporte": "tenis",
     "imagen": "imagenes/cancha-tenis.png",
-    "color": "#007bff"
+    "color": "#007bff",
+    "precio": 20
   },
   {
     "id": "CAN-07",
     "nombre": "Cancha de Tenis 2",
     "deporte": "tenis",
     "imagen": "imagenes/cancha-tenis.png",
-    "color": "#007bff"
+    "color": "#007bff",
+    "precio": 22
   },
   {
     "id": "CAN-08",
     "nombre": "Cancha de Tenis 3",
     "deporte": "tenis",
     "imagen": "imagenes/cancha-tenis.png",
-    "color": "#007bff"
+    "color": "#007bff",
+    "precio": 18
   },
   {
     "id": "CAN-09",
     "nombre": "Cancha de Tenis 4",
     "deporte": "tenis",
     "imagen": "imagenes/cancha-tenis.png",
-    "color": "#007bff"
+    "color": "#007bff",
+    "precio": 24
   },
   {
     "id": "CAN-10",
     "nombre": "Cancha de Tenis 5",
     "deporte": "tenis",
     "imagen": "imagenes/cancha-tenis.png",
-    "color": "#007bff"
+    "color": "#007bff",
+    "precio": 26
   },
   {
     "id": "CAN-11",
     "nombre": "Cancha de Pádel 1",
     "deporte": "padel",
     "imagen": "imagenes/cancha-padel.png",
-    "color": "#17a2b8"
+    "color": "#17a2b8",
+    "precio": 22
   },
   {
     "id": "CAN-12",
     "nombre": "Cancha de Pádel 2",
     "deporte": "padel",
     "imagen": "imagenes/cancha-padel.png",
-    "color": "#17a2b8"
+    "color": "#17a2b8",
+    "precio": 25
   },
   {
     "id": "CAN-13",
     "nombre": "Cancha de Pádel 3",
     "deporte": "padel",
     "imagen": "imagenes/cancha-padel.png",
-    "color": "#17a2b8"
+    "color": "#17a2b8",
+    "precio": 20
   },
   {
     "id": "CAN-14",
     "nombre": "Cancha de Pádel 4",
     "deporte": "padel",
     "imagen": "imagenes/cancha-padel.png",
-    "color": "#17a2b8"
+    "color": "#17a2b8",
+    "precio": 28
   },
   {
     "id": "CAN-15",
     "nombre": "Cancha de Pádel 5",
     "deporte": "padel",
     "imagen": "imagenes/cancha-padel.png",
-    "color": "#17a2b8"
+    "color": "#17a2b8",
+    "precio": 30
   }
 ]

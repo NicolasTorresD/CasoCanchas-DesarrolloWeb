@@ -3,12 +3,12 @@
  * Separa la lógica de comunicación con APIs externas y datos locales
  */
 
-// Configuración de la API de clima
+// Configuración de la API de clima usando variables de entorno
 const CLIMA_CONFIG = {
-  baseUrl: 'https://api.open-meteo.com/v1/forecast',
-  latitude: -33.4489,  // Santiago, Chile
-  longitude: -70.6693,
-  timezone: 'auto'
+  baseUrl: import.meta.env.VITE_CLIMA_API_URL || 'https://api.open-meteo.com/v1/forecast',
+  latitude: import.meta.env.VITE_CLIMA_LATITUDE || -33.4489,  // Santiago, Chile
+  longitude: import.meta.env.VITE_CLIMA_LONGITUDE || -70.6693,
+  timezone: import.meta.env.VITE_CLIMA_TIMEZONE || 'America/Santiago'
 };
 
 /**
