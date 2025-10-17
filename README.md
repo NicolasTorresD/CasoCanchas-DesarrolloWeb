@@ -4,16 +4,6 @@
 
 Sistema web moderno para la gestión y reserva de canchas deportivas, desarrollado con Vue 3 y Vite. Permite a los usuarios reservar canchas, dejar reseñas y consultar información meteorológica para planificar mejor sus actividades deportivas.
 
-> **Integrantes:** Bastián Oyanadel, Pablo Sepúlveda, Nicolás Torres, Benjamín Vivanco
-
-> **Asignatura:** Desarrollo Web y Móvil
-
-> **Framework:** Vue.js
-
-> **Integrantes:** Bastián Oyanadel, Pablo Sepúlveda, Nicolás Torres, Benjamín Vivanco
-
-> **API utilizada:** Open-Meteo (versión gratuita)
-
 ---
 
 ![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?style=flat&logo=vue.js)
