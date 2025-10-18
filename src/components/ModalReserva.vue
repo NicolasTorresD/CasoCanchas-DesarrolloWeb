@@ -44,9 +44,13 @@
                 class="form-control" 
                 id="fecha-reserva" 
                 v-model="reserva.fecha"
+                :min="fechaMinima"
                 @change="cargarClima"
                 required
               >
+              <small class="form-text text-muted">
+                Solo puedes reservar desde hoy en adelante
+              </small>
             </div>
             <div class="mb-3">
               <label for="hora-reserva" class="form-label">Hora de Reserva</label>
@@ -57,21 +61,18 @@
                 required
               >
                 <option value="">Selecciona una hora</option>
-                <option value="08:00">08:00</option>
-                <option value="09:00">09:00</option>
-                <option value="10:00">10:00</option>
-                <option value="11:00">11:00</option>
-                <option value="12:00">12:00</option>
-                <option value="13:00">13:00</option>
-                <option value="14:00">14:00</option>
-                <option value="15:00">15:00</option>
-                <option value="16:00">16:00</option>
-                <option value="17:00">17:00</option>
-                <option value="18:00">18:00</option>
-                <option value="19:00">19:00</option>
-                <option value="20:00">20:00</option>
-                <option value="21:00">21:00</option>
+                <option 
+                  v-for="hora in horasDisponibles" 
+                  :key="hora" 
+                  :value="hora"
+                  :disabled="!esHoraValida(hora)"
+                >
+                  {{ hora }} {{ !esHoraValida(hora) ? '(No disponible)' : '' }}
+                </option>
               </select>
+              <small class="form-text text-muted" v-if="esHoy">
+                Para hoy solo puedes reservar desde 2 horas en adelante
+              </small>
             </div>
 
             <!-- Sección de Clima -->
@@ -140,7 +141,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive, watch, computed } from 'vue';
 import { obtenerClima, obtenerDescripcionClima, obtenerIconoClima } from '@/services/api';
 
 const props = defineProps({
@@ -168,11 +169,51 @@ const clima = reactive({
 
 const modalElement = ref(null);
 
+// Horarios disponibles
+const horasDisponibles = [
+  '08:00', '09:00', '10:00', '11:00', '12:00', 
+  '13:00', '14:00', '15:00', '16:00', '17:00', 
+  '18:00', '19:00', '20:00', '21:00'
+];
+
+// Fecha mínima (hoy)
+const fechaMinima = computed(() => {
+  const hoy = new Date();
+  return hoy.toISOString().split('T')[0];
+});
+
+// Verificar si la fecha seleccionada es hoy
+const esHoy = computed(() => {
+  if (!reserva.fecha) return false;
+  const hoy = new Date();
+  const fechaSeleccionada = new Date(reserva.fecha + 'T12:00:00');
+  
+  return (
+    fechaSeleccionada.getFullYear() === hoy.getFullYear() &&
+    fechaSeleccionada.getMonth() === hoy.getMonth() &&
+    fechaSeleccionada.getDate() === hoy.getDate()
+  );
+});
+
 watch(() => props.canchaSeleccionada, (newCancha) => {
   if (newCancha) {
     limpiarFormulario();
   }
 });
+
+// Verificar si una hora es válida para reservar
+function esHoraValida(hora) {
+  // Si no es hoy, todas las horas son válidas
+  if (!esHoy.value) return true;
+  
+  // Si es hoy, validar que la hora sea al menos 2 horas después de ahora
+  const ahora = new Date();
+  const horaActual = ahora.getHours();
+  const [horaReserva] = hora.split(':').map(Number);
+  
+  // Debe ser al menos 2 horas después de la hora actual
+  return horaReserva >= (horaActual + 2);
+}
 
 async function cargarClima() {
   if (!reserva.fecha) return;
@@ -198,6 +239,28 @@ function confirmarReserva() {
   if (!reserva.nombre || !reserva.fecha || !reserva.hora) {
     alert('Por favor completa todos los campos');
     return;
+  }
+
+  // Validar que la fecha no sea del pasado
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+  const fechaSeleccionada = new Date(reserva.fecha + 'T12:00:00');
+  
+  if (fechaSeleccionada < hoy) {
+    alert('❌ No puedes reservar en una fecha pasada');
+    return;
+  }
+
+  // Validar que la hora no sea del pasado si es hoy
+  if (esHoy.value) {
+    const ahora = new Date();
+    const horaActual = ahora.getHours();
+    const [horaReserva] = reserva.hora.split(':').map(Number);
+    
+    if (horaReserva < (horaActual + 2)) {
+      alert('❌ Para hoy, debes reservar con al menos 2 horas de anticipación');
+      return;
+    }
   }
 
   const nuevaReserva = {
