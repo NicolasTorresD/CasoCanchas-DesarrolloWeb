@@ -145,7 +145,7 @@ Función -	Descripción
   git clone https://github.com/usuario/CasoCanchas.git
 
 2. Abrir el proyecto en Visual Studio Code.
-3. Iniciar el entorno con Live Server o abrir directamente index.html en el navegador.
+3. En la terminal ejecutar un 'npm install' y luego un 'npm run dev'.
 4. Comprobar conexión a Internet (requerida para el funcionamiento de la API).
 
 
