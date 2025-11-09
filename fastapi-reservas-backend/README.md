@@ -41,17 +41,17 @@ The project is organized into several directories and files:
 
 2. Create a virtual environment:
    ```
-   python -m venv venv
+   python -m venv .venv
    ```
 
 3. Activate the virtual environment:
    - On Windows:
      ```
-     venv\Scripts\activate
+     .venv\Scripts\activate
      ```
    - On macOS/Linux:
      ```
-     source venv/bin/activate
+     source .venv/bin/activate
      ```
 
 4. Install the required dependencies:
