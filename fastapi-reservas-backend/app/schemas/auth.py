@@ -30,6 +30,7 @@ class Token(BaseModel):
     """Schema para el token JWT"""
     access_token: str
     token_type: str = "bearer"
+    user_id: int  # ID del usuario autenticado
 
 class TokenData(BaseModel):
     """Schema para datos decodificados del token"""

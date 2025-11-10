@@ -42,7 +42,7 @@ class AuthService:
 
         # Crear JWT token
         access_token = create_access_token(data={"sub": user.email, "user_id": user.id_usuario})
-        return Token(access_token=access_token, token_type="bearer")
+        return Token(access_token=access_token, token_type="bearer", user_id=user.id_usuario)
 
     def get_user_by_email(self, email: str) -> Usuario:
         """Obtener usuario por email"""
