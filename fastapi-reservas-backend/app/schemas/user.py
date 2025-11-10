@@ -20,15 +20,13 @@ class UserResponse(BaseModel):
     activo: bool
 
     class Config:
-        from_attributes = True  # Pydantic v2
-        orm_mode = True  # Compatibilidad con Pydantic v1
+        from_attributes = True
 
 class User(UserBase):
     id_usuario: int
 
     class Config:
         from_attributes = True
-        orm_mode = True
 
 class UserInDB(User):
     hashed_password: str

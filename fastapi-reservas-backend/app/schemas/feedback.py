@@ -21,7 +21,6 @@ class FeedbackResponse(BaseModel):
 
     class Config:
         from_attributes = True
-        orm_mode = True
 
 class Feedback(FeedbackBase):
     id_feedback: int
@@ -32,4 +31,3 @@ class Feedback(FeedbackBase):
 
     class Config:
         from_attributes = True
-        orm_mode = True

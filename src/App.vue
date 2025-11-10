@@ -1,117 +1,123 @@
 <template>
   <div id="app">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <div class="container-fluid">
-        <span class="navbar-brand fw-bold" style="cursor: default;">
-          <i class="fas fa-futbol me-2"></i>Club Deportivo
-        </span>
-        <button 
-          class="navbar-toggler" 
-          type="button" 
-          data-bs-toggle="collapse" 
-          data-bs-target="#navbarNav"
-        >
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a 
-                class="nav-link" 
-                :class="{ active: paginaActual === 'listado' }"
-                href="#" 
-                @click.prevent="cambiarPagina('listado')"
-              >
-                <i class="fas fa-list me-2"></i>Canchas Disponibles
-              </a>
-            </li>
-            <li class="nav-item">
-              <a 
-                class="nav-link" 
-                :class="{ active: paginaActual === 'reservas' }"
-                href="#" 
-                @click.prevent="cambiarPagina('reservas')"
-              >
-                <i class="fas fa-calendar-check me-2"></i>Mis Reservas
-              </a>
-            </li>
-            <li class="nav-item">
-              <a 
-                class="nav-link" 
-                :class="{ active: paginaActual === 'feedback' }"
-                href="#" 
-                @click.prevent="cambiarPagina('feedback')"
-              >
-                <i class="fas fa-comment-dots me-2"></i>Dejar Opinión
-              </a>
-            </li>
-          </ul>
+    <!-- Si NO está logueado, mostrar login -->
+    <Login v-if="!logueado" @login-exitoso="logueado = true" />
+
+    <!-- Si está logueado, mostrar dashboard -->
+    <div v-else>
+      <!-- Navbar -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <span class="navbar-brand fw-bold" style="cursor: default;">
+            <i class="fas fa-futbol me-2"></i>Club Deportivo
+          </span>
+          <button 
+            class="navbar-toggler" 
+            type="button" 
+            data-bs-toggle="collapse" 
+            data-bs-target="#navbarNav"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a 
+                  class="nav-link" 
+                  :class="{ active: paginaActual === 'listado' }"
+                  href="#" 
+                  @click.prevent="cambiarPagina('listado')"
+                >
+                  <i class="fas fa-list me-2"></i>Canchas Disponibles
+                </a>
+              </li>
+              <li class="nav-item">
+                <a 
+                  class="nav-link" 
+                  :class="{ active: paginaActual === 'reservas' }"
+                  href="#" 
+                  @click.prevent="cambiarPagina('reservas')"
+                >
+                  <i class="fas fa-calendar-check me-2"></i>Mis Reservas
+                </a>
+              </li>
+              <li class="nav-item">
+                <a 
+                  class="nav-link" 
+                  :class="{ active: paginaActual === 'feedback' }"
+                  href="#" 
+                  @click.prevent="cambiarPagina('feedback')"
+                >
+                  <i class="fas fa-comment-dots me-2"></i>Dejar Opinión
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
+      </nav>
+
+      <!-- Contenido Principal -->
+      <div class="container-fluid">
+        <transition name="fade" mode="out-in">
+          <ListadoCanchas 
+            v-if="paginaActual === 'listado'"
+            :canchas="canchas"
+            :feedbacks="feedbacks"
+            v-model:filtroDeporte="filtroDeporte"
+            v-model:filtroFecha="filtroFecha"
+            @reservar="prepararReserva"
+          />
+
+          <MisReservas 
+            v-else-if="paginaActual === 'reservas'"
+            :reservas="reservas"
+            :canchas="canchas"
+            @cancelar="mostrarModalCancelacion"
+          />
+
+          <FormularioFeedback 
+            v-else-if="paginaActual === 'feedback'"
+            :canchas="canchas"
+            :feedbacks="feedbacks"
+            @enviar="agregarFeedback"
+          />
+        </transition>
       </div>
-    </nav>
 
-    <!-- Contenido Principal -->
-    <div class="container-fluid">
-      <transition name="fade" mode="out-in">
-        <ListadoCanchas 
-          v-if="paginaActual === 'listado'"
-          :canchas="canchas"
-          :feedbacks="feedbacks"
-          v-model:filtroDeporte="filtroDeporte"
-          v-model:filtroFecha="filtroFecha"
-          @reservar="prepararReserva"
-        />
+      <!-- Modal de Reserva -->
+      <ModalReserva 
+        :canchaSeleccionada="canchaSeleccionada"
+        @confirmar="agregarReserva"
+        ref="modalReserva"
+      />
 
-        <MisReservas 
-          v-else-if="paginaActual === 'reservas'"
-          :reservas="reservas"
-          :canchas="canchas"
-          @cancelar="mostrarModalCancelacion"
-        />
-
-        <FormularioFeedback 
-          v-else-if="paginaActual === 'feedback'"
-          :canchas="canchas"
-          :feedbacks="feedbacks"
-          @enviar="agregarFeedback"
-        />
-      </transition>
-    </div>
-
-    <!-- Modal de Reserva -->
-    <ModalReserva 
-      :canchaSeleccionada="canchaSeleccionada"
-      @confirmar="agregarReserva"
-      ref="modalReserva"
-    />
-
-    <!-- Modal de Cancelación -->
-    <div 
-      class="modal fade" 
-      id="modalCancelar" 
-      tabindex="-1" 
-      aria-labelledby="modalCancelarLabel" 
-      aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalCancelarLabel">
-              <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Cancelación
-            </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            ¿Estás seguro de que deseas cancelar esta reserva?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-              No, mantener
-            </button>
-            <button type="button" class="btn btn-danger" @click="confirmarCancelacion">
-              Sí, cancelar
-            </button>
+      <!-- Modal de Cancelación -->
+      <div 
+        class="modal fade" 
+        id="modalCancelar" 
+        tabindex="-1" 
+        aria-labelledby="modalCancelarLabel" 
+        aria-hidden="true"
+      >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalCancelarLabel">
+                <i class="fas fa-exclamation-triangle me-2"></i>Confirmar Cancelación
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              ¿Estás seguro de que deseas cancelar esta reserva?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                No, mantener
+              </button>
+              <button type="button" class="btn btn-danger" @click="confirmarCancelacion">
+                Sí, cancelar
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -121,6 +127,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
+import Login from './components/Login.vue';
 import ListadoCanchas from './components/ListadoCanchas.vue';
 import MisReservas from './components/MisReservas.vue';
 import FormularioFeedback from './components/FormularioFeedback.vue';
@@ -133,6 +140,9 @@ import {
   cancelarReserva,
   guardarFeedback
 } from './services/api';
+
+// Estado de login
+const logueado = ref(false);
 
 // Estado de la aplicación
 const paginaActual = ref('listado');
@@ -151,6 +161,7 @@ const modalReserva = ref(null);
 
 // Cargar datos al montar el componente
 onMounted(async () => {
+  if (!logueado.value) return;
   console.log('🚀 Aplicación Vue montada');
   
   // Cargar datos desde JSONs

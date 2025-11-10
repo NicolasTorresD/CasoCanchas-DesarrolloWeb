@@ -31,11 +31,9 @@ class ReservaResponse(BaseModel):
 
     class Config:
         from_attributes = True
-        orm_mode = True
 
 class Reserva(ReservaBase):
     id_reserva: int
 
     class Config:
         from_attributes = True
-        orm_mode = True

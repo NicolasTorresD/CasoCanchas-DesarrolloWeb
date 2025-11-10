@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import auth, users, canchas, reservas, feedbacks
+from app.api.v1.endpoints import auth, users, canchas, reservas, feedbacks, deportes
 
 router = APIRouter()
 
@@ -8,6 +8,9 @@ router.include_router(auth.router, prefix="/auth", tags=["auth"])
 
 # Include the user management routes
 router.include_router(users.router, prefix="/users", tags=["users"])
+
+# Include the sports management routes
+router.include_router(deportes.router, prefix="/deportes", tags=["deportes"])
 
 # Include the court management routes
 router.include_router(canchas.router, prefix="/canchas", tags=["canchas"])
