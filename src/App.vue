@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <!-- Si NO está logueado, mostrar login -->
-    <Login v-if="!logueado" @login-exitoso="logueado = true" />
+    <Login v-if="!logueado" @login-exitoso="manejarLogin" />
+
 
     <!-- Si está logueado, mostrar dashboard -->
     <div v-else>
@@ -50,6 +51,18 @@
                 >
                   <i class="fas fa-comment-dots me-2"></i>Dejar Opinión
                 </a>
+              </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item d-flex align-items-center me-3">
+                <span class="nav-link disabled">
+                Hola, {{ usuario?.nombre || 'Usuario' }}
+                </span>
+              </li>
+              <li class="nav-item">
+                <button class="btn btn-outline-danger" @click="cerrarSesion">
+                <i class="fas fa-sign-out-alt me-2"></i>Cerrar sesión
+                </button>
               </li>
             </ul>
           </div>
@@ -156,8 +169,24 @@ const idReservaACancelar = ref(null);
 const filtroDeporte = ref('todos');
 const filtroFecha = ref('');
 
+const usuario = ref(null);
+
+function manejarLogin(user) {
+  usuario.value = user; // guardar el objeto completo del usuario
+  logueado.value = true;
+}
+
 // Referencias a modals
 const modalReserva = ref(null);
+
+function cerrarSesion() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user_id');
+  usuario.value = null;
+  logueado.value = false;
+  paginaActual.value = 'listado'; // opcional
+}
+
 
 // Cargar datos al montar el componente
 onMounted(async () => {

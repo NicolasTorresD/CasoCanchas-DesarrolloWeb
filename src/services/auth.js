@@ -2,12 +2,18 @@
 import backend from './backend';
 
 export async function login(payload) {
-  // ahora usamos la ruta completa
+  // POST al login
   const { data } = await backend.post('/api/v1/auth/login', payload);
-  return data; // { access_token, token_type }
+  return data; // { access_token, token_type, user_id }
 }
 
-export async function me() {
-  const { data } = await backend.get('/api/v1/users/me'); // ajusta si tu backend expone /api/v1/users/me
+export async function getUserById(id) {
+  // GET al usuario por id
+  const { data } = await backend.get(`/api/v1/users/${id}`);
   return data;
+}
+
+export async function register(payload) {
+  const { data } = await backend.post('/api/v1/auth/register', payload);
+  return data; // { access_token, token_type, user_id }
 }
