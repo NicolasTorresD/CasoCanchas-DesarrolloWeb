@@ -93,7 +93,7 @@ cd CasoCanchas-DesarrolloWeb/fastapi-reservas-backend
 ### 2. Crear entorno virtual
 
 ```bash
-# Usar Python 3.12.3 (recomendado)
+# Usar Python 3.12.x (recomendado)
 python3.12 -m venv .venv
 ```
 
