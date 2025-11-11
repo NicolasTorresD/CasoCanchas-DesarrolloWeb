@@ -29,12 +29,12 @@
         class="col-md-4 mb-4"
       >
         <div class="card cancha-card h-100">
-          <img :src="cancha.imagen" class="card-img-top" :alt="cancha.nombre">
+          <img :src="`${cancha.imagen_url}`" :alt="cancha.nombre">
           <div class="card-body">
             <h5 class="card-title">{{ cancha.nombre }}</h5>
             <p class="card-text">
-              <span class="badge bg-primary">{{ capitalizarDeporte(cancha.deporte) }}</span>
-              <span class="badge bg-success ms-2">{{ formatearPrecio(cancha.precio) }}/hora</span>
+              <span class="badge bg-primary">{{ nombreDeporte(cancha.id_deporte) }}</span>
+              <span class="badge bg-success ms-2">{{ formatearPrecio(cancha.precio_hora) }}/hora</span>
             </p>
             <div 
               class="calificacion mb-2" 
@@ -42,8 +42,8 @@
               style="cursor: pointer;"
               :title="'Ver reseñas de ' + cancha.nombre"
             >
-              <span v-html="generarEstrellas(promedioCalificacion(cancha.id))"></span>
-              <small class="text-muted ms-2">({{ promedioCalificacion(cancha.id) }})</small>
+              <span v-html="generarEstrellas(promedioCalificacion(cancha.id_cancha))"></span>
+              <small class="text-muted ms-2">({{ promedioCalificacion(cancha.id_cancha) }})</small>
             </div>
             <button 
               class="btn btn-primary w-100" 
@@ -131,6 +131,10 @@ const props = defineProps({
   feedbacks: {
     type: Array,
     required: true
+  },
+  deportes: {
+    type: Array,
+    required: true
   }
 });
 
@@ -152,11 +156,11 @@ const canchasFiltradas = computed(() => {
 
 const resenasCanchaSeleccionada = computed(() => {
   if (!canchaSeleccionada.value) return [];
-  return props.feedbacks.filter(f => f.canchaId === canchaSeleccionada.value.id);
+  return props.feedbacks.filter(f => f.id_cancha === canchaSeleccionada.value.id);
 });
 
 function promedioCalificacion(canchaId) {
-  const feedbacksCancha = props.feedbacks.filter(f => f.canchaId === canchaId);
+  const feedbacksCancha = props.feedbacks.filter(f => f.id_cancha === canchaId);
   if (feedbacksCancha.length === 0) return 0;
   const suma = feedbacksCancha.reduce((total, fb) => total + fb.calificacion, 0);
   return (suma / feedbacksCancha.length).toFixed(1);
@@ -196,6 +200,12 @@ function verResenas(cancha) {
 function formatearFecha(fecha) {
   const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
   return new Date(fecha).toLocaleDateString('es-ES', opciones);
+}
+
+function nombreDeporte(idDeporte) {
+  const dep = props.deportes.find(d => d.id_deporte === idDeporte);
+  if (!dep || !dep.nombre) return 'Sin deporte';
+  return dep.nombre.charAt(0).toUpperCase() + dep.nombre.slice(1);
 }
 </script>
 

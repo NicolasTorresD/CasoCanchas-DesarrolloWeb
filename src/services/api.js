@@ -3,6 +3,8 @@
  * Separa la lógica de comunicación con APIs externas y datos locales
  */
 
+import backend from './backend';
+
 // Configuración de la API de clima usando variables de entorno
 const CLIMA_CONFIG = {
   baseUrl: import.meta.env.VITE_CLIMA_API_URL || 'https://api.open-meteo.com/v1/forecast',
@@ -16,9 +18,8 @@ const CLIMA_CONFIG = {
  */
 export async function cargarCanchas() {
   try {
-    const response = await fetch('/canchas.json');
-    if (!response.ok) throw new Error('Error al cargar canchas');
-    return await response.json();
+    const { data } = await backend.get('/api/v1/canchas');
+    return data; // array de canchas
   } catch (error) {
     console.error('Error cargando canchas:', error);
     return [];
@@ -27,9 +28,8 @@ export async function cargarCanchas() {
 
 export async function cargarReservas() {
   try {
-    const response = await fetch('/reservas.json');
-    if (!response.ok) throw new Error('Error al cargar reservas');
-    return await response.json();
+    const { data } = await backend.get('/api/v1/reservas');
+    return data;
   } catch (error) {
     console.error('Error cargando reservas:', error);
     return [];
@@ -38,11 +38,20 @@ export async function cargarReservas() {
 
 export async function cargarFeedbacks() {
   try {
-    const response = await fetch('/feedbacks.json');
-    if (!response.ok) throw new Error('Error al cargar feedbacks');
-    return await response.json();
+    const { data } = await backend.get('/api/v1/feedbacks');
+    return data;
   } catch (error) {
     console.error('Error cargando feedbacks:', error);
+    return [];
+  }
+}
+
+export async function cargarDeportes() {
+  try {
+    const { data } = await backend.get('/api/v1/deportes');
+    return data; // array de deportes [{ id_deporte: 1, nombre: "futbol" }, ...]
+  } catch (error) {
+    console.error('Error cargando deportes:', error);
     return [];
   }
 }
@@ -164,15 +173,13 @@ export function obtenerIconoClima(codigo) {
 /**
  * Guarda una nueva reserva (simulado con localStorage)
  */
-export function guardarReserva(reserva) {
+export async function guardarReserva(reserva) {
   try {
-    const reservasGuardadas = JSON.parse(localStorage.getItem('reservas') || '[]');
-    reservasGuardadas.push(reserva);
-    localStorage.setItem('reservas', JSON.stringify(reservasGuardadas));
-    return { success: true };
+    const { data } = await backend.post('/api/v1/reservas', reserva);
+    return data;
   } catch (error) {
-    console.error('Error guardando reserva:', error);
-    return { success: false, error: 'Error al guardar la reserva' };
+    console.error('Error creando reserva:', error);
+    throw error;
   }
 }
 

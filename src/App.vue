@@ -76,6 +76,7 @@
             v-if="paginaActual === 'listado'"
             :canchas="canchas"
             :feedbacks="feedbacks"
+            :deportes="deportes"
             v-model:filtroDeporte="filtroDeporte"
             v-model:filtroFecha="filtroFecha"
             @reservar="prepararReserva"
@@ -100,6 +101,7 @@
       <!-- Modal de Reserva -->
       <ModalReserva 
         :canchaSeleccionada="canchaSeleccionada"
+        :usuario="usuario"
         @confirmar="agregarReserva"
         ref="modalReserva"
       />
@@ -151,11 +153,14 @@ import {
   cargarFeedbacks,
   guardarReserva,
   cancelarReserva,
-  guardarFeedback
+  guardarFeedback,
+  cargarDeportes
 } from './services/api';
 
 // Estado de login
 const logueado = ref(false);
+
+const deportes = ref([]);
 
 // Estado de la aplicación
 const paginaActual = ref('listado');
@@ -171,9 +176,14 @@ const filtroFecha = ref('');
 
 const usuario = ref(null);
 
-function manejarLogin(user) {
-  usuario.value = user; // guardar el objeto completo del usuario
+async function manejarLogin(user) {
+  usuario.value = user;
   logueado.value = true;
+
+  canchas.value = await cargarCanchas();
+  reservas.value = await cargarReservas();
+  feedbacks.value = await cargarFeedbacks();
+  deportes.value = await cargarDeportes();
 }
 
 // Referencias a modals
@@ -190,10 +200,10 @@ function cerrarSesion() {
 
 // Cargar datos al montar el componente
 onMounted(async () => {
-  if (!logueado.value) return;
   console.log('🚀 Aplicación Vue montada');
   
-  // Cargar datos desde JSONs
+  
+  // Cargar datos desde el backend
   canchas.value = await cargarCanchas();
   reservas.value = await cargarReservas();
   feedbacks.value = await cargarFeedbacks();

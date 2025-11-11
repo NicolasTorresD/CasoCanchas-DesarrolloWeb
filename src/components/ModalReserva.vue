@@ -24,7 +24,7 @@
                 class="form-control" 
                 id="nombre-reserva" 
                 v-model="reserva.nombre"
-                required
+                readonly
               >
             </div>
             <div class="mb-3">
@@ -142,10 +142,14 @@
 
 <script setup>
 import { ref, reactive, watch, computed } from 'vue';
-import { obtenerClima, obtenerDescripcionClima, obtenerIconoClima } from '@/services/api';
+import { obtenerClima, obtenerDescripcionClima, obtenerIconoClima, guardarReserva } from '@/services/api';
 
 const props = defineProps({
   canchaSeleccionada: {
+    type: Object,
+    default: null
+  },
+    usuario: { 
     type: Object,
     default: null
   }
@@ -235,7 +239,7 @@ async function cargarClima() {
   }
 }
 
-function confirmarReserva() {
+async function confirmarReserva() {
   if (!reserva.nombre || !reserva.fecha || !reserva.hora) {
     alert('Por favor completa todos los campos');
     return;
@@ -264,26 +268,33 @@ function confirmarReserva() {
   }
 
   const nuevaReserva = {
-    id: Date.now().toString(),
-    nombre: reserva.nombre,
-    canchaId: props.canchaSeleccionada.id,
+    id_usuario: props.usuario.id_usuario,   // 👈 del usuario logueado
+    id_cancha: props.canchaSeleccionada.id_cancha, // 👈 de la cancha seleccionada
     fecha: reserva.fecha,
-    hora: reserva.hora
+    hora: reserva.hora,            // 👈 backend espera formato HH:MM:SS
+    duracion: 60,                           // fijo por ahora
+    estado: 'RESERVADA',
+    precio_total: props.canchaSeleccionada.precio // o calcula según horas
   };
+
+    try {
+    const reservaCreada = await crearReserva(nuevaReserva);
+    emit('confirmar', reservaCreada);
+    alert('✅ Reserva realizada con éxito');
+  } catch (error) {
+    alert('❌ Error al crear la reserva en el servidor');
+  }
 
   emit('confirmar', nuevaReserva);
   
   // Cerrar modal usando Bootstrap
   const modal = window.bootstrap.Modal.getInstance(modalElement.value);
-  if (modal) {
-    modal.hide();
-  }
-
+  if (modal) modal.hide();
   limpiarFormulario();
 }
 
 function limpiarFormulario() {
-  reserva.nombre = '';
+  reserva.nombre = props.usuario?.nombre || ''; 
   reserva.fecha = '';
   reserva.hora = '';
   clima.data = null;
