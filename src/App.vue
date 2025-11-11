@@ -86,15 +86,17 @@
             v-else-if="paginaActual === 'reservas'"
             :reservas="reservas"
             :canchas="canchas"
+            :usuario="usuario"
             @cancelar="mostrarModalCancelacion"
           />
 
           <FormularioFeedback 
-            v-else-if="paginaActual === 'feedback'"
-            :canchas="canchas"
-            :feedbacks="feedbacks"
-            @enviar="agregarFeedback"
-          />
+  v-else-if="paginaActual === 'feedback'"
+  :canchas="canchas"
+  :reservas="reservas"
+  :usuario="usuario"
+  @enviar="agregarFeedback"
+/>
         </transition>
       </div>
 
@@ -152,7 +154,6 @@ import {
   cargarReservas, 
   cargarFeedbacks,
   guardarReserva,
-  cancelarReserva,
   guardarFeedback,
   cargarDeportes
 } from './services/api';
@@ -175,6 +176,7 @@ const filtroDeporte = ref('todos');
 const filtroFecha = ref('');
 
 const usuario = ref(null);
+
 
 async function manejarLogin(user) {
   usuario.value = user;

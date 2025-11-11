@@ -4,22 +4,19 @@
       <i class="fas fa-list me-2"></i>Canchas Disponibles
     </h2>
 
-    <!-- Filtros -->
-    <div class="row mb-4">
-      <div class="col-md-6">
-        <label for="filtro-deporte" class="form-label">Filtrar por deporte</label>
-        <select id="filtro-deporte" class="form-select" v-model="filtroDeporte">
-          <option value="todos">Todos los deportes</option>
-          <option value="futbol">Fútbol</option>
-          <option value="tenis">Tenis</option>
-          <option value="padel">Pádel</option>
-        </select>
-      </div>
-      <div class="col-md-6">
-        <label for="filtro-fecha" class="form-label">Filtrar por fecha disponible</label>
-        <input type="date" id="filtro-fecha" class="form-control" v-model="filtroFecha">
-      </div>
-    </div>
+<!-- Filtros -->
+<div class="row mb-4">
+  <div class="col-md-6">
+    <label for="filtro-deporte" class="form-label">Filtrar por deporte</label>
+    <select id="filtro-deporte" class="form-select" v-model="filtroDeporte">
+      <option value="todos">Todos los deportes</option>
+      <option value="futbol">Fútbol</option>
+      <option value="tenis">Tenis</option>
+      <option value="padel">Pádel</option>
+    </select>
+  </div>
+</div>
+
 
     <!-- Lista de canchas -->
     <div class="row" id="listado-canchas">
@@ -61,67 +58,71 @@
     </div>
 
     <!-- Modal de Reseñas -->
-    <div 
-      class="modal fade" 
-      id="modalResenas" 
-      tabindex="-1" 
-      aria-labelledby="modalResenasLabel" 
-      aria-hidden="true"
-      ref="modalResenas"
-    >
-      <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="modalResenasLabel">
-              <i class="fas fa-star me-2"></i>Reseñas de {{ canchaSeleccionada?.nombre }}
-            </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <div v-if="resenasCanchaSeleccionada.length === 0" class="alert alert-info">
-              Esta cancha aún no tiene reseñas.
+<!-- Modal de Reseñas -->
+<div 
+  class="modal fade" 
+  id="modalResenas" 
+  tabindex="-1" 
+  aria-labelledby="modalResenasLabel" 
+  aria-hidden="true"
+  ref="modalResenas"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalResenasLabel">
+          <i class="fas fa-star me-2"></i>Reseñas de {{ canchaSeleccionada?.nombre }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div v-if="resenasCanchaSeleccionada.length === 0" class="alert alert-info">
+          Esta cancha aún no tiene reseñas.
+        </div>
+        <div v-else>
+          <div class="mb-3 text-center">
+            <h4>Calificación Promedio</h4>
+            <div class="calificacion-grande">
+              <span v-html="generarEstrellas(promedioCalificacion(canchaSeleccionada?.id_cancha))"></span>
+              <span class="ms-2 fs-4">{{ promedioCalificacion(canchaSeleccionada?.id_cancha) }} / 5.0</span>
             </div>
-            <div v-else>
-              <div class="mb-3 text-center">
-                <h4>Calificación Promedio</h4>
-                <div class="calificacion-grande">
-                  <span v-html="generarEstrellas(promedioCalificacion(canchaSeleccionada?.id))"></span>
-                  <span class="ms-2 fs-4">{{ promedioCalificacion(canchaSeleccionada?.id) }} / 5.0</span>
-                </div>
-                <small class="text-muted">({{ resenasCanchaSeleccionada.length }} reseña{{ resenasCanchaSeleccionada.length !== 1 ? 's' : '' }})</small>
-              </div>
-              <hr>
-              <div 
-                v-for="resena in resenasCanchaSeleccionada" 
-                :key="resena.id"
-                class="card mb-3"
-              >
-                <div class="card-body">
-                  <div class="d-flex justify-content-between align-items-start mb-2">
-                    <div>
-                      <h6 class="mb-1">{{ resena.usuario }}</h6>
-                      <small class="text-muted">{{ formatearFecha(resena.fecha) }}</small>
-                    </div>
-                    <div class="calificacion">
-                      <span v-html="generarEstrellas(resena.calificacion)"></span>
-                    </div>
-                  </div>
-                  <p class="mb-0">{{ resena.comentario }}</p>
-                </div>
-              </div>
-            </div>
+            <small class="text-muted">
+              ({{ resenasCanchaSeleccionada.length }} reseña{{ resenasCanchaSeleccionada.length !== 1 ? 's' : '' }})
+            </small>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <hr>
+          <div 
+            v-for="resena in resenasCanchaSeleccionada" 
+            :key="resena.id_feedback"
+            class="card mb-3"
+          >
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                  <h6 class="mb-1">{{ resena.usuario }}</h6>
+                  <small class="text-muted">{{ formatearFecha(resena.fecha) }}</small>
+                </div>
+                <div class="calificacion">
+                  <span v-html="generarEstrellas(resena.calificacion)"></span>
+                </div>
+              </div>
+              <p class="mb-0">{{ resena.comentario }}</p>
+            </div>
           </div>
         </div>
       </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
     </div>
+  </div>
+</div>
   </div>
 </template>
 
 <script setup>
 import { computed, ref } from 'vue';
+import { cargarFeedbacksPorCancha } from '../services/api';
 
 const props = defineProps({
   canchas: {
@@ -140,24 +141,22 @@ const props = defineProps({
 
 defineEmits(['reservar']);
 
+const resenasCanchaSeleccionada = ref([]);
+
 const filtroDeporte = defineModel('filtroDeporte', { default: 'todos' });
-const filtroFecha = defineModel('filtroFecha', { default: '' });
 
 const canchaSeleccionada = ref(null);
 const modalResenas = ref(null);
 
 const canchasFiltradas = computed(() => {
   return props.canchas.filter(cancha => {
-    const cumpleDeporte = filtroDeporte.value === 'todos' || cancha.deporte.toLowerCase() === filtroDeporte.value.toLowerCase();
-    const cumpleFecha = !filtroFecha.value || (cancha.disponibilidad && cancha.disponibilidad.includes(filtroFecha.value));
-    return cumpleDeporte && cumpleFecha;
+    const cumpleDeporte =
+      filtroDeporte.value === 'todos' ||
+      nombreDeporte(cancha.id_deporte).toLowerCase() === filtroDeporte.value.toLowerCase();
+    return cumpleDeporte;
   });
 });
 
-const resenasCanchaSeleccionada = computed(() => {
-  if (!canchaSeleccionada.value) return [];
-  return props.feedbacks.filter(f => f.id_cancha === canchaSeleccionada.value.id);
-});
 
 function promedioCalificacion(canchaId) {
   const feedbacksCancha = props.feedbacks.filter(f => f.id_cancha === canchaId);
@@ -179,10 +178,6 @@ function generarEstrellas(calificacion) {
   return estrellas;
 }
 
-function capitalizarDeporte(deporte) {
-  return deporte.charAt(0).toUpperCase() + deporte.slice(1);
-}
-
 function formatearPrecio(precio) {
   // Multiplicar por 1000 para convertir a pesos chilenos
   const precioChileno = precio * 1000;
@@ -190,10 +185,11 @@ function formatearPrecio(precio) {
   return `$${precioChileno.toLocaleString('es-CL')}`;
 }
 
-function verResenas(cancha) {
+async function verResenas(cancha) {
   canchaSeleccionada.value = cancha;
-  const modalElement = document.getElementById('modalResenas');
-  const modal = new window.bootstrap.Modal(modalElement);
+  resenasCanchaSeleccionada.value = await cargarFeedbacksPorCancha(cancha.id_cancha);
+
+  const modal = new window.bootstrap.Modal(modalResenas.value);
   modal.show();
 }
 

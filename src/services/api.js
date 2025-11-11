@@ -34,6 +34,7 @@ export async function cargarReservas() {
     console.error('Error cargando reservas:', error);
     return [];
   }
+  
 }
 
 export async function cargarFeedbacks() {
@@ -186,15 +187,13 @@ export async function guardarReserva(reserva) {
 /**
  * Cancela una reserva por ID
  */
-export function cancelarReserva(id) {
+export async function cancelarReservaBackend(id_reserva) {
   try {
-    const reservasGuardadas = JSON.parse(localStorage.getItem('reservas') || '[]');
-    const reservasFiltradas = reservasGuardadas.filter(r => r.id !== id);
-    localStorage.setItem('reservas', JSON.stringify(reservasFiltradas));
+    await backend.delete(`/api/v1/reservas/${id_reserva}`);
     return { success: true };
   } catch (error) {
-    console.error('Error cancelando reserva:', error);
-    return { success: false, error: 'Error al cancelar la reserva' };
+    console.error('Error cancelando reserva en backend:', error);
+    return { success: false, error: 'No se pudo cancelar la reserva' };
   }
 }
 
@@ -212,3 +211,28 @@ export function guardarFeedback(feedback) {
     return { success: false, error: 'Error al guardar el comentario' };
   }
 }
+
+export async function enviarFeedback(reservaId, usuarioId, payload) {
+  try {
+    const response = await backend.post(
+      `/api/v1/feedbacks/reserva/${reservaId}?usuario_id=${usuarioId}`,
+      payload
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error enviando feedback:", error);
+    throw error;
+  }
+}
+
+export async function cargarFeedbacksPorCancha(id_cancha) {
+  try {
+    const response = await backend.get(`/api/v1/feedbacks/cancha/${id_cancha}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error cargando feedbacks de cancha:", error);
+    return [];
+  }
+}
+
+
