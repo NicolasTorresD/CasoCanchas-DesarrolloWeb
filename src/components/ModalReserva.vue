@@ -175,10 +175,11 @@ const modalElement = ref(null);
 
 // Horarios disponibles
 const horasDisponibles = [
-  '08:00', '09:00', '10:00', '11:00', '12:00', 
-  '13:00', '14:00', '15:00', '16:00', '17:00', 
-  '18:00', '19:00', '20:00', '21:00'
+  '08:00:00', '09:00:00', '10:00:00', '11:00:00', '12:00:00',
+  '13:00:00', '14:00:00', '15:00:00', '16:00:00', '17:00:00',
+  '18:00:00', '19:00:00', '20:00:00', '21:00:00'
 ];
+
 
 // Fecha mínima (hoy)
 const fechaMinima = computed(() => {
@@ -245,6 +246,17 @@ async function confirmarReserva() {
     return;
   }
 
+  function normalizarFecha(fechaInput) {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(fechaInput)) {
+    return fechaInput;
+  }
+  if (/^\d{2}-\d{2}-\d{4}$/.test(fechaInput)) {
+    const [dia, mes, anio] = fechaInput.split("-");
+    return `${anio}-${mes}-${dia}`;
+  }
+  return fechaInput; 
+}
+
   // Validar que la fecha no sea del pasado
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
@@ -267,26 +279,30 @@ async function confirmarReserva() {
     }
   }
 
-  const nuevaReserva = {
-    id_usuario: props.usuario.id_usuario,   // 👈 del usuario logueado
-    id_cancha: props.canchaSeleccionada.id_cancha, // 👈 de la cancha seleccionada
-    fecha: reserva.fecha,
-    hora: reserva.hora,            // 👈 backend espera formato HH:MM:SS
-    duracion: 60,                           // fijo por ahora
-    estado: 'RESERVADA',
-    precio_total: props.canchaSeleccionada.precio // o calcula según horas
-  };
+const nuevaReserva = {
+  id_usuario: props.usuario.id_usuario,
+  id_cancha: props.canchaSeleccionada.id_cancha,
+  fecha: reserva.fecha,                 // ya es YYYY-MM-DD
+  hora: reserva.hora,                   // ya es HH:MM:SS
+  duracion: 60,
+  estado: 'Reservada',                  // prueba también 'RESERVADA' si falla
+  precio_total: Number(props.canchaSeleccionada.precio_hora)
+};
 
-    try {
-    const reservaCreada = await crearReserva(nuevaReserva);
-    emit('confirmar', reservaCreada);
-    alert('✅ Reserva realizada con éxito');
-  } catch (error) {
-    alert('❌ Error al crear la reserva en el servidor');
-  }
+console.log("Reserva enviada:", nuevaReserva);
 
-  emit('confirmar', nuevaReserva);
-  
+try {
+  const reservaCreada = await guardarReserva(nuevaReserva);
+  emit('confirmar', reservaCreada);
+  alert('✅ Reserva realizada con éxito');
+  const modal = window.bootstrap.Modal.getInstance(modalElement.value);
+  if (modal) modal.hide();
+  limpiarFormulario();
+} catch (error) {
+  console.error("Error creando reserva:", error.response?.data || error);
+  alert('❌ Error al crear la reserva en el servidor');
+}
+
   // Cerrar modal usando Bootstrap
   const modal = window.bootstrap.Modal.getInstance(modalElement.value);
   if (modal) modal.hide();
