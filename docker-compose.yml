@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  fastapi-app:
+    build: ./fastapi-reservas-backend
+    container_name: fastapi-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./fastapi-reservas-backend:/app
+    environment:
+      APP_SECRET_KEY: "clave-super-segura-para-dev"
+      DATABASE_URL: "sqlite:///./reservas.db"
+    networks:
+      - internal-net
+
+networks:
+  internal-net:
