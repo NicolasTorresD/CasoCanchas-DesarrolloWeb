@@ -148,16 +148,27 @@ const props = defineProps({
   canchaSeleccionada: {
     type: Object,
     default: null
+  },
+  usuario: {
+    type: Object,
+    default: null
   }
 });
 
 const emit = defineEmits(['confirmar']);
 
 const reserva = reactive({
-  nombre: '',
+  nombre: props.usuario?.nombre || '',
   fecha: '',
   hora: ''
 });
+
+// Auto-fill nombre when usuario changes
+watch(() => props.usuario, (newUsuario) => {
+  if (newUsuario && newUsuario.nombre) {
+    reserva.nombre = newUsuario.nombre;
+  }
+}, { deep: true });
 
 const clima = reactive({
   data: null,

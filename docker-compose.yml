@@ -1,18 +1,44 @@
-version: "3.9"
-
 services:
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: canchas_db
+      MYSQL_USER: canchas_user
+      MYSQL_PASSWORD: canchas_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
   fastapi-app:
-    build: ./fastapi-reservas-backend
+    build:
+      context: ./fastapi-reservas-backend    # ← Cambia esto
+      dockerfile: Dockerfile
     container_name: fastapi-app
+    environment:
+      APP_SECRET_KEY: "${APP_SECRET_KEY}"
+      DATABASE_URL: "${DATABASE_URL}"
     ports:
       - "8000:8000"
-    volumes:
-      - ./fastapi-reservas-backend:/app
-    environment:
-      APP_SECRET_KEY: "clave-super-segura-para-dev"
-      DATABASE_URL: "sqlite:///./reservas.db"
-    networks:
-      - internal-net
+    depends_on:
+      db:
+        condition: service_healthy
 
-networks:
-  internal-net:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: frontend-app
+    ports:
+      - "80:80"
+    depends_on:
+      - fastapi-app
+
+volumes:
+  mysql_data:

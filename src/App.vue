@@ -85,6 +85,7 @@
             v-else-if="paginaActual === 'reservas'"
             :reservas="reservas"
             :canchas="canchas"
+            :usuario="usuario"
             @cancelar="mostrarModalCancelacion"
           />
 
@@ -92,6 +93,7 @@
             v-else-if="paginaActual === 'feedback'"
             :canchas="canchas"
             :feedbacks="feedbacks"
+            :usuario="usuario"
             @enviar="agregarFeedback"
           />
         </transition>
@@ -100,6 +102,7 @@
       <!-- Modal de Reserva -->
       <ModalReserva 
         :canchaSeleccionada="canchaSeleccionada"
+        :usuario="usuario"
         @confirmar="agregarReserva"
         ref="modalReserva"
       />
@@ -171,9 +174,47 @@ const filtroFecha = ref('');
 
 const usuario = ref(null);
 
+// Función para cargar todos los datos necesarios
+async function cargarDatos() {
+  try {
+    canchas.value = await cargarCanchas();
+    reservas.value = await cargarReservas();
+    feedbacks.value = await cargarFeedbacks();
+
+    // Fusionar con datos en localStorage
+    const reservasGuardadas = localStorage.getItem('reservas');
+    if (reservasGuardadas) {
+      try {
+        const reservasLS = JSON.parse(reservasGuardadas);
+        reservas.value = [...reservas.value, ...reservasLS];
+      } catch (e) {
+        console.error('Error cargando reservas del localStorage', e);
+      }
+    }
+
+    const feedbacksGuardados = localStorage.getItem('feedbacks');
+    if (feedbacksGuardados) {
+      try {
+        const feedbacksLS = JSON.parse(feedbacksGuardados);
+        feedbacks.value = [...feedbacks.value, ...feedbacksLS];
+      } catch (e) {
+        console.error('Error cargando feedbacks del localStorage', e);
+      }
+    }
+
+    console.log(`📊 Datos cargados: ${canchas.value.length} canchas, ${reservas.value.length} reservas, ${feedbacks.value.length} feedbacks`);
+  } catch (e) {
+    console.error('Error cargando datos:', e);
+  }
+}
+
 function manejarLogin(user) {
   usuario.value = user; // guardar el objeto completo del usuario
   logueado.value = true;
+  // Guardar usuario en localStorage para persistencia
+  localStorage.setItem('usuario', JSON.stringify(user));
+  // Cargar datos después del login
+  cargarDatos();
 }
 
 // Referencias a modals
@@ -182,6 +223,7 @@ const modalReserva = ref(null);
 function cerrarSesion() {
   localStorage.removeItem('token');
   localStorage.removeItem('user_id');
+  localStorage.removeItem('usuario');
   usuario.value = null;
   logueado.value = false;
   paginaActual.value = 'listado'; // opcional
@@ -190,36 +232,19 @@ function cerrarSesion() {
 
 // Cargar datos al montar el componente
 onMounted(async () => {
-  if (!logueado.value) return;
-  console.log('🚀 Aplicación Vue montada');
-  
-  // Cargar datos desde JSONs
-  canchas.value = await cargarCanchas();
-  reservas.value = await cargarReservas();
-  feedbacks.value = await cargarFeedbacks();
-
-  // Cargar datos del localStorage si existen
-  const reservasGuardadas = localStorage.getItem('reservas');
-  if (reservasGuardadas) {
+  // Intentar restaurar usuario desde localStorage
+  const usuarioGuardado = localStorage.getItem('usuario');
+  if (usuarioGuardado) {
     try {
-      const reservasLS = JSON.parse(reservasGuardadas);
-      reservas.value = [...reservas.value, ...reservasLS];
+      usuario.value = JSON.parse(usuarioGuardado);
+      logueado.value = true;
+      // Cargar datos si estamos logueados
+      await cargarDatos();
     } catch (e) {
-      console.error('Error cargando reservas del localStorage', e);
+      console.error('Error restaurando usuario:', e);
+      localStorage.removeItem('usuario');
     }
   }
-
-  const feedbacksGuardados = localStorage.getItem('feedbacks');
-  if (feedbacksGuardados) {
-    try {
-      const feedbacksLS = JSON.parse(feedbacksGuardados);
-      feedbacks.value = [...feedbacks.value, ...feedbacksLS];
-    } catch (e) {
-      console.error('Error cargando feedbacks del localStorage', e);
-    }
-  }
-
-  console.log(`📊 Datos cargados: ${canchas.value.length} canchas, ${reservas.value.length} reservas, ${feedbacks.value.length} feedbacks`);
 });
 
 // Navegación entre páginas

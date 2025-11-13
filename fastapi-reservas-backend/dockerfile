@@ -1,9 +1,18 @@
-# Imagen base
 FROM python:3.11-slim
 
 WORKDIR /app
+
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt pymysql
+
 COPY . .
+
+# Copiar archivos de datos iniciales al root del contenedor para que
+# el script `app.scripts.load_initial_data` pueda leerlos fácilmente.
+COPY canchas.json /canchas.json
+COPY reservas.json /reservas.json
+COPY feedbacks.json /feedbacks.json
+
 EXPOSE 8000
-CMD ["uvicorn","app.main:app","--host","0.0.0.0","--port","8000"]
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

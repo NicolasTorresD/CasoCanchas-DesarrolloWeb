@@ -90,52 +90,20 @@ git clone https://github.com/NicolasTorresD/CasoCanchas-DesarrolloWeb.git
 cd CasoCanchas-DesarrolloWeb/fastapi-reservas-backend
 ```
 
-### 2. Crear entorno virtual
+### 2. Configurar variables de entorno
 
-```bash
-# Usar Python 3.12.x (recomendado)
-python3.12 -m venv .venv
-```
-
-### 3. Activar entorno virtual
-
-**Linux/macOS:**
-```bash
-source .venv/bin/activate
-```
-
-**Windows:**
-```bash
-.venv\Scripts\activate
-```
-
-### 4. Instalar dependencias
-
-```bash
-pip install -r requirements.txt
-```
-
-### 5. Configurar variables de entorno
-
-Crear archivo `.env` en la raíz del proyecto:
+Crear archivo `.env` en `fastapi-reservas-backend/`:
 
 ```env
-# Base de datos
+# Para desarrollo (SQLite)
 DATABASE_URL=sqlite:///./reservas.db
-
-# JWT
 SECRET_KEY=tu-clave-secreta-super-segura-cambiala
 ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=30
-
-# Configuración de la aplicación
 DEBUG=True
-```
 
-**⚠️ IMPORTANTE**: Cambia el `SECRET_KEY` por una clave segura. Puedes generarla con:
-
-```bash
-python -c "import secrets; print(secrets.token_urlsafe(32))"
+# Para producción con Docker (MySQL)
+DATABASE_URL=mysql+pymysql://canchas_user:canchas_password@db:3306/canchas_db
 ```
 
 ### 6. Inicializar la base de datos
@@ -148,13 +116,26 @@ alembic upgrade head
 python -m app.scripts.load_initial_data
 ```
 
-## 🏃 Ejecutar la aplicación
+## 🏗️ Uso en Docker (Recomendado)
+
+El backend está diseñado para ejecutarse en Docker como parte del stack completo. Desde la raíz del proyecto:
 
 ```bash
-uvicorn app.main:app --reload
+# Construir e iniciar todos los servicios
+docker compose up -d --build
+
+# Cargar datos iniciales en la BD MySQL
+docker exec -i fastapi-app python -m app.scripts.load_initial_data
+
+# Ver logs del backend
+docker logs -f fastapi-app
+
+# Acceder a la API
+# http://localhost:8000
+# http://localhost:8000/docs (Swagger UI)
 ```
 
-La API estará disponible en: **http://127.0.0.1:8000**
+**Nota:** Los archivos `canchas.json`, `reservas.json` y `feedbacks.json` se copian automáticamente en la imagen Docker del backend durante el build, permitiendo que el script `load_initial_data` los encuentre sin problemas.
 
 ## 📚 Documentación de la API
 

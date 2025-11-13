@@ -3,8 +3,8 @@
 
 > **Asignatura:** Desarrollo Web y Móvil  
 > **Integrantes:** Bastián Oyanadel · Pablo Sepúlveda · Nicolás Torres · Benjamín Vivanco  
-> **Tecnologías:** HTML · CSS · JavaScript · Bootstrap · Open-Meteo API  
-> **Tipo de proyecto:** Frontend Only  
+> **Tecnologías:** Vue 3 · FastAPI · MySQL · Docker · Bootstrap · Open-Meteo API  
+> **Tipo de proyecto:** Full Stack (Frontend + Backend + Base de Datos)  
 > **Apoyo:** Desarrollo asistido por Inteligencia Artificial (ChatGPT / Copilot)
 
 
@@ -14,10 +14,16 @@
 ## 🧩 Descripción del Proyecto
 
 
-Este proyecto consiste en una **aplicación web interactiva para la reserva de canchas deportivas**, desarrollada con tecnologías frontend y complementada con una **API meteorológica (Open-Meteo)** que permite visualizar el **clima actual** antes de realizar una reserva.
+Este proyecto consiste en una **aplicación web full-stack para la reserva de canchas deportivas**, construida con Vue 3 (frontend), FastAPI (backend) y MySQL (base de datos), todo dockerizado para facilitar el despliegue.
 
-La aplicación está pensada para **simular un sistema real de gestión de reservas** de un club deportivo, con el propósito de ofrecer una experiencia práctica al usuario, integrando conceptos de validación de formularios, persistencia de datos y consumo de servicios externos.  
-Además, se mantuvo la filosofía del proyecto original, pero mejorando la organización del código, la interactividad y el diseño visual.
+La aplicación está pensada para **simular un sistema real de gestión de reservas** de un club deportivo, integrando:
+- **Autenticación de usuarios** con JWT
+- **Gestión completa de canchas** y deportes
+- **Sistema de reservas** con validación de disponibilidad
+- **Feedbacks y valoraciones** de usuarios
+- **API meteorológica (Open-Meteo)** para visualizar el clima antes de reservar
+- **Persistencia en base de datos relacional** (MySQL en Docker)
+- **Arquitectura modular y escalable** con separación de responsabilidades
 
 
 ---
@@ -25,14 +31,35 @@ Además, se mantuvo la filosofía del proyecto original, pero mejorando la organ
 
 ## ⚙️ Tecnologías Utilizadas
 
-| Herramienta - Uso principal 
-
-| **HTML5 / CSS3** : Estructura y estilo del sitio.
-| **JavaScript (ES6)** : Lógica funcional, validaciones, consumo de API y renderización dinámica.
-| **Bootstrap 5** : Diseño responsivo, modales, toasts y componentes visuales.
-| **JSON / LocalStorage** : Simulación de persistencia de datos de reservas y canchas.
-| **Open-Meteo API** : Obtención del clima actual según coordenadas predefinidas.
-| **ChatGPT / Copilot** : Asistencia técnica durante el desarrollo e integración de la API.
+| **Frontend:**
+| **Vue 3** : Framework reactivo para interfaz de usuario.
+| **Vite** : Bundler moderno y rápido para desarrollo.
+| **Bootstrap 5** : Diseño responsivo, modales y componentes visuales.
+| **Axios** : Cliente HTTP para consumo de APIs.
+| **JavaScript (ES6)** : Lógica funcional y validaciones.
+|
+| **Backend:**
+| **FastAPI** : Framework web Python moderno y de alto rendimiento.
+| **SQLAlchemy** : ORM para gestión de base de datos.
+| **Pydantic** : Validación de datos con schemas.
+| **PyJWT** : Autenticación basada en tokens JWT.
+| **Alembic** : Migraciones de base de datos.
+| **Bcrypt** : Hash seguro de contraseñas.
+| **PyMySQL** : Driver para conexión a MySQL.
+|
+| **Base de Datos:**
+| **MySQL 8.0** : Sistema relacional para persistencia de datos.
+|
+| **Infraestructura:**
+| **Docker & Docker Compose** : Containerización y orquestación de servicios.
+| **Nginx** : Servidor web para servir el frontend.
+| **Python 3.11** : Lenguaje para el backend.
+|
+| **APIs Externas:**
+| **Open-Meteo API** : Obtención del clima actual según coordenadas.
+|
+| **Apoyo:**
+| **ChatGPT / Copilot** : Asistencia técnica durante el desarrollo.
 
 
 ---
@@ -41,33 +68,38 @@ Además, se mantuvo la filosofía del proyecto original, pero mejorando la organ
 ## 🌐 Uso de la Aplicación
 
 
-Al ingresar al sitio, el usuario accede a una interfaz simple y funcional, organizada en tres vistas principales:
+Al ingresar al sitio, el usuario accede a una interfaz completa y funcional, organizada en varias vistas principales:
 
-### **1. Página principal**
-- Se presentan las **canchas disponibles**, separadas por deporte (fútbol, tenis y pádel).
-- Cada cancha se muestra dentro de una **tarjeta con imagen, nombre y botón de reserva**.
-- Desde esta vista el usuario puede seleccionar qué cancha desea reservar.
+### **1. Login & Registro**
+- Los usuarios pueden crear una nueva cuenta o ingresar con credenciales existentes.
+- La autenticación se realiza contra la base de datos MySQL usando JWT.
+- Las contraseñas se almacenan con hash bcrypt por seguridad.
 
-### **2. Formulario de reserva**
+### **2. Listado de Canchas Disponibles**
+- Se presentan las **canchas disponibles**, con opción de filtrar por deporte (fútbol, tenis y pádel) y fecha.
+- Cada cancha se muestra en una **tarjeta con imagen, nombre, precio y calificación**.
+- Los usuarios pueden ver reseñas y valoraciones de otros usuarios.
+- Desde esta vista se puede hacer clic en **"Reservar"** para abrir el modal de reserva.
+
+### **3. Formulario de Reserva**
 - Una vez seleccionada la cancha, se despliega un formulario donde el usuario ingresa:
-  - Su **nombre**.
   - La **fecha y hora** deseada.
   - El **deporte/cancha** (precargado según selección).
 - En esta misma vista se muestra la **información del clima actual**, obtenida desde la **API Open-Meteo**.
-- El sistema consulta automáticamente la API al cargar la vista y muestra:
+- El sistema consulta automáticamente la API y muestra:
   - Temperatura (°C)
   - Velocidad del viento
-  - Estado general del clima (interpretado según código meteorológico)
-- Si ocurre un error (por ejemplo, sin conexión o coordenadas no válidas), se muestra un **mensaje de advertencia** con Bootstrap.
+  - Estado general del clima
+- Si ocurre un error, se muestra un **mensaje de advertencia**.
 
-### **3. Listado de reservas**
-- Las reservas confirmadas se almacenan en el navegador usando **localStorage**, simulando una base de datos.
-- El usuario puede ver todas sus reservas en una tabla con la siguiente información:
-  - Nombre del usuario.
-  - Cancha y deporte.
-  - Fecha y hora.
-  - Estado (Reservada / Cancelada).
-- Desde este listado es posible **cancelar una reserva** a través de un **modal de confirmación**, que actualiza el estado en tiempo real.
+### **4. Mis Reservas**
+- Los usuarios pueden ver todas sus reservas confirmadas en una tabla.
+- Se muestra: Cancha, deporte, fecha, hora y estado de cada reserva.
+- Es posible **cancelar una reserva** a través de un **modal de confirmación**.
+
+### **5. Dejar Opinión (Feedback)**
+- Los usuarios pueden dejar reseñas y calificaciones (1-5 estrellas) sobre las canchas que han utilizado.
+- Los comentarios se almacenan en la base de datos y aparecen visibles para otros usuarios.
 
 
 ---
@@ -76,23 +108,21 @@ Al ingresar al sitio, el usuario accede a una interfaz simple y funcional, organ
 ## 🌤️ Integración de la API Open-Meteo
 
 La aplicación utiliza la **API pública Open-Meteo**, que entrega información meteorológica en tiempo real mediante coordenadas geográficas.  
-La integración se realiza con `fetch()` directamente desde el frontend.
+La integración se realiza desde el frontend usando `axios`.
 
 **Endpoint base:**
-``bash
-  https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LON}&current_weather=true
+```
+https://api.open-meteo.com/v1/forecast?latitude={LAT}&longitude={LON}&daily=...
+```
 
 **Datos utilizados:**
-
-- Temperatura actual (temperature)
-- Velocidad del viento (windspeed)
-- Código del clima (weathercode), convertido en texto (“Soleado”, “Nublado”, “Lluvia ligera”, etc.)
+- Temperatura actual (temperature_2m_max, temperature_2m_min)
+- Código del clima (weathercode), convertido en texto ("Soleado", "Nublado", "Lluvia ligera", etc.)
+- Probabilidad de precipitación
 
 **Manejo de errores:**
-
-- Si la API no responde, la aplicación muestra un aviso como:
-  - “No se pudieron obtener los datos del clima. Intente nuevamente más tarde.”
-- En caso de respuesta vacía o datos fuera de rango, se cargan valores por defecto o se oculta el cuadro de clima.
+- Si la API no responde, se muestra un aviso al usuario.
+- En caso de respuesta vacía, se cargan valores por defecto o se oculta el cuadro de clima.
 
 Esta integración permite que el usuario considere las condiciones climáticas antes de confirmar su reserva.
 
@@ -102,64 +132,256 @@ Esta integración permite que el usuario considere las condiciones climáticas a
 
 ## 🧠 Estructura del Código
 
-El código está dividido en partes claras que separan la lógica de la interfaz, la persistencia de datos y el consumo de la API.
+El proyecto está organizado en dos directorios principales:
 
-**index.html**
+### **Frontend** (root)
+```
+src/
+├── components/              # Componentes reutilizables de Vue
+│   ├── Login.vue
+│   ├── ListadoCanchas.vue
+│   ├── MisReservas.vue
+│   ├── FormularioFeedback.vue
+│   └── ModalReserva.vue
+├── services/                # Servicios de consumo de APIs
+│   ├── api.js               # Endpoints del backend
+│   ├── auth.js              # Autenticación
+│   └── backend.js           # Cliente HTTP
+├── App.vue                  # Componente principal
+└── main.js                  # Punto de entrada
+index.html                  # Template HTML
+vite.config.js             # Configuración de Vite
+styles.css                 # Estilos globales
+Dockerfile.frontend        # Imagen Docker (Node build + Nginx)
+package.json               # Dependencias frontend
+```
 
-  - Define la estructura principal de la página.
+### **Backend** (`fastapi-reservas-backend/`)
+```
+app/
+├── api/v1/
+│   ├── endpoints/          # Controladores
+│   │   ├── auth.py         # Login, register, refresh token
+│   │   ├── users.py        # Gestión de usuarios
+│   │   ├── canchas.py      # Listado y detalles de canchas
+│   │   ├── reservas.py     # Crear, listar, cancelar reservas
+│   │   ├── feedbacks.py    # Crear y listar feedbacks
+│   │   └── deportes.py     # Gestión de deportes
+│   └── router.py           # Enrutador principal
+├── models/                 # Modelos SQLAlchemy
+│   ├── usuario.py
+│   ├── cancha.py
+│   ├── reserva.py
+│   ├── feedback.py
+│   ├── deporte.py
+│   └── horario_disponible.py
+├── schemas/                # Schemas Pydantic (validación)
+│   ├── user.py
+│   ├── auth.py
+│   ├── cancha.py
+│   ├── reserva.py
+│   ├── feedback.py
+│   └── deporte.py
+├── services/               # Lógica de negocio
+│   ├── auth_service.py
+│   ├── user_service.py
+│   ├── cancha_service.py
+│   ├── reserva_service.py
+│   ├── deporte_service.py
+│   └── feedback_service.py
+├── core/                   # Configuración
+│   ├── config.py
+│   ├── security.py
+│   ├── dependencies.py
+│   └── __init__.py
+├── scripts/                # Utilidades
+│   ├── load_initial_data.py  # Carga datos iniciales en BD
+│   ├── inspect_db.py
+│   └── test_codigo_auto.py
+├── database.py             # Configuración de SQLAlchemy
+├── main.py                 # Punto de entrada FastAPI
+└── __init__.py
+alembic/                   # Migraciones de BD
+requirements.txt           # Dependencias Python
+Dockerfile                 # Imagen Docker del backend
+.env.example              # Plantilla de variables de entorno
+```
 
-  - Contiene los contenedores donde se renderizan las canchas, el formulario y el listado de reservas.
-
-  - Importa los scripts de Bootstrap, el archivo principal app.js y los estilos CSS personalizados.
-
-**app.js**
-
-Contiene toda la lógica funcional del sitio. Se destacan las siguientes funciones principales:
-
-Función -	Descripción
-  - loadCanchas()	: Carga los datos desde canchas.json y genera las tarjetas de canchas.
-  - renderReservas()	: Muestra la lista de reservas actuales y las actualiza dinámicamente.
-  - reservarCancha()	: Valida los datos ingresados y guarda una nueva reserva en localStorage.
-  - cancelarReserva(id)	: Cambia el estado de una reserva a “Cancelada”.
-  - obtenerClima()	: Realiza la petición a la API de Open-Meteo y muestra la información del clima.
-  - mostrarToast() / mostrarModal()	Muestra mensajes y confirmaciones usando Bootstrap.
-
-**canchas.json / reservas.json**
-
-- Archivos de ejemplo que contienen la información inicial del sistema.
-- canchas.json define el listado de canchas disponibles.
-- reservas.json entrega un formato inicial para pruebas.
-
-**styles.css**
-
-- Contiene los estilos personalizados que complementan Bootstrap.
-- Se definen colores, espaciados y tamaños específicos para mantener coherencia visual.
+### **Base de Datos & Orquestación**
+```
+docker-compose.yml         # Orquestación de servicios
+.env                       # Variables de entorno
+canchas.json               # Datos iniciales (canchas)
+reservas.json              # Datos iniciales (reservas de ejemplo)
+feedbacks.json             # Datos iniciales (feedbacks de ejemplo)
+```
 
 
 ---
 
 
-## 🚀 Instalación y Ejecución
+## 🚀 Instalación y Ejecución con Docker (Recomendado)
 
-1. Clonar el repositorio:
-  git clone https://github.com/usuario/CasoCanchas.git
+### **Requisitos Previos**
+- Docker & Docker Compose instalados
+- Puerto 80 disponible (frontend)
+- Puerto 8000 disponible (backend)
+- Puerto 3306 disponible (MySQL)
 
-2. Abrir el proyecto en Visual Studio Code.
-3. En la terminal ejecutar un 'npm install' y luego un 'npm run dev'.
-4. Comprobar conexión a Internet (requerida para el funcionamiento de la API).
+### **1. Clonar el repositorio**
+```bash
+git clone https://github.com/usuario/CasoCanchas-DesarrolloWeb.git
+cd CasoCanchas-DesarrolloWeb
+```
 
+### **2. Configurar variables de entorno**
+Crear archivo `.env` en la raíz del proyecto:
+```env
+# Base de datos
+MYSQL_ROOT_PASSWORD=rootpassword
+MYSQL_DATABASE=canchas_db
+MYSQL_USER=canchas_user
+MYSQL_PASSWORD=canchas_password
+
+# FastAPI
+DATABASE_URL=mysql+pymysql://canchas_user:canchas_password@db:3306/canchas_db
+APP_SECRET_KEY=xK9mP2vN8qR5tL3wZ7jH4sC6yF1aE0bD9gU8iO
+```
+
+### **3. Construir e iniciar los servicios**
+```bash
+docker compose up -d --build
+```
+
+Este comando:
+- Construye la imagen del backend (FastAPI + Python 3.11)
+- Construye la imagen del frontend (Node build + Nginx)
+- Inicia el contenedor de MySQL 8.0
+- Inicia todos los servicios en modo background
+
+### **4. Cargar datos iniciales (primera ejecución)**
+```bash
+docker exec -i fastapi-app python -m app.scripts.load_initial_data
+```
+
+Esto carga en la BD:
+- 3 deportes (fútbol, tenis, pádel)
+- 15 canchas de ejemplo
+- 5 usuarios de ejemplo
+- Reservas y feedbacks iniciales
+
+### **5. Acceder a la aplicación**
+- **Frontend:** http://localhost
+- **Backend API:** http://localhost:8000
+- **Docs interactivos:** http://localhost:8000/docs
+
+### **6. Usuarios de Prueba**
+Tras la carga inicial, puedes acceder con:
+
+| Email | Contraseña | Rol |
+|-------|-----------|-----|
+| carlos.diaz@example.com | password123 | Usuario |
+| maria.lopez@example.com | password123 | Usuario |
+
+O registrarse con un nuevo email.
+
+### **7. Detener los servicios**
+```bash
+docker compose down
+```
+
+Para detener y eliminar volúmenes (reiniciar BD):
+```bash
+docker compose down -v
+```
 
 ---
 
+## 🚀 Instalación Local (Sin Docker)
+
+### **Backend**
+```bash
+cd fastapi-reservas-backend
+
+# Crear entorno virtual
+python3.11 -m venv .venv
+source .venv/bin/activate  # Linux/macOS
+.venv\Scripts\activate     # Windows
+
+# Instalar dependencias
+pip install -r requirements.txt
+
+# Configurar BD (SQLite para desarrollo)
+echo 'DATABASE_URL=sqlite:///./reservas.db' > .env
+
+# Crear tablas y cargar datos
+alembic upgrade head
+python -m app.scripts.load_initial_data
+
+# Iniciar servidor
+uvicorn app.main:app --reload
+```
+
+### **Frontend**
+```bash
+npm install
+npm run dev
+```
+
+La aplicación estará en `http://localhost:5173`
+
+---
+
+## 🔐 Seguridad
+
+- **Autenticación:** JWT con expiración configurables
+- **Contraseñas:** Hash con bcrypt
+- **CORS:** Configurado para aceptar solicitudes del frontend
+- **Validación:** Todos los inputs validados con Pydantic
+- **BD:** Credenciales en `.env` (no en repositorio)
+
+---
+
+## 📊 Endpoints Principales de la API
+
+### **Autenticación**
+```
+POST   /api/v1/auth/register      - Registrar nuevo usuario
+POST   /api/v1/auth/login         - Iniciar sesión
+POST   /api/v1/auth/refresh       - Renovar token
+```
+
+### **Canchas**
+```
+GET    /api/v1/canchas            - Listar todas las canchas
+GET    /api/v1/canchas/{id}       - Detalle de cancha
+GET    /api/v1/canchas?deporte=.. - Filtrar por deporte
+```
+
+### **Reservas**
+```
+POST   /api/v1/reservas           - Crear reserva
+GET    /api/v1/reservas           - Mis reservas
+DELETE /api/v1/reservas/{id}      - Cancelar reserva
+```
+
+### **Feedbacks**
+```
+POST   /api/v1/feedbacks          - Crear feedback
+GET    /api/v1/feedbacks          - Listar feedbacks
+```
+
+---
 
 ## 🤖 Uso de Inteligencia Artificial
 
 Durante el desarrollo, el equipo utilizó ChatGPT y Copilot como asistentes de apoyo para:
 
-  - Solucionar errores al integrar la API del clima.
-  - Adaptar la estructura de código de la versión anterior del proyecto.
-  - Mejorar la validación de formularios y el manejo de errores.
-  - Generar parte del contenido técnico del README y comentarios en el código.
+  - Solucionar errores al integrar FastAPI con MySQL
+  - Adaptar la estructura de código original (JavaScript vanilla → Vue 3 + Vite)
+  - Mejorar la validación de formularios y el manejo de errores
+  - Generar contenido técnico del README y comentarios en el código
+  - Optimizar la dockerización del proyecto
 
 La IA fue utilizada como una herramienta de asistencia técnica y aprendizaje, no como reemplazo del trabajo del equipo.
 
@@ -176,3 +398,8 @@ La IA fue utilizada como una herramienta de asistencia técnica y aprendizaje, n
 
 
 ---
+
+
+## 📄 Licencia
+
+Este proyecto es parte de un trabajo académico de Desarrollo Web.

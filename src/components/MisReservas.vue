@@ -11,7 +11,7 @@
 
     <div v-else class="row" id="listado-reservas">
       <div 
-        v-for="reserva in reservas" 
+        v-for="reserva in misReservas" 
         :key="reserva.id" 
         class="col-md-6 mb-4"
       >
@@ -55,6 +55,8 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
+
 const props = defineProps({
   reservas: {
     type: Array,
@@ -63,10 +65,22 @@ const props = defineProps({
   canchas: {
     type: Array,
     required: true
+  },
+  usuario: {
+    type: Object,
+    default: null
   }
 });
 
 defineEmits(['cancelar']);
+
+// Filter reservas to show only current user's bookings
+const misReservas = computed(() => {
+  if (!props.usuario || !props.usuario.nombre) {
+    return props.reservas;
+  }
+  return props.reservas.filter(r => r.nombre === props.usuario.nombre);
+});
 
 function obtenerNombreCancha(canchaId) {
   const cancha = props.canchas.find(c => c.id === canchaId);

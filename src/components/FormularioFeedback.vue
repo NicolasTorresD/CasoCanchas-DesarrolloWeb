@@ -102,7 +102,7 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive, watch } from 'vue';
 
 const props = defineProps({
   canchas: {
@@ -112,17 +112,28 @@ const props = defineProps({
   feedbacks: {
     type: Array,
     required: true
+  },
+  usuario: {
+    type: Object,
+    default: null
   }
 });
 
 const emit = defineEmits(['enviar']);
 
 const nuevoFeedback = reactive({
-  usuario: '',
+  usuario: props.usuario?.nombre || '',
   canchaId: '',
   calificacion: 0,
   comentario: ''
 });
+
+// Auto-fill usuario when it changes
+watch(() => props.usuario, (newUsuario) => {
+  if (newUsuario && newUsuario.nombre) {
+    nuevoFeedback.usuario = newUsuario.nombre;
+  }
+}, { deep: true });
 
 function enviarFeedback() {
   if (nuevoFeedback.calificacion === 0) {
