@@ -18,7 +18,7 @@
         <div class="card reserva-card h-100">
           <div class="card-body">
             <h5 class="card-title">
-              <i class="fas fa-user me-2"></i>{{ reserva.nombre }}
+              <i class="fas fa-user me-2"></i>{{ usuario?.nombre || 'Mi reserva' }}
             </h5>
             <p class="card-text">
               <strong><i class="fas fa-futbol me-2"></i>Cancha:</strong> 
@@ -76,10 +76,13 @@ defineEmits(['cancelar']);
 
 // Filter reservas to show only current user's bookings
 const misReservas = computed(() => {
-  if (!props.usuario || !props.usuario.nombre) {
+  // Si hay usuario, mostramos sus reservas; de lo contrario, mostramos todas
+  if (!props.usuario || !props.usuario.id_usuario) {
     return props.reservas;
   }
-  return props.reservas.filter(r => r.nombre === props.usuario.nombre);
+  // Reservas de la API no traen el nombre; filtramos por id de usuario cuando venga en el listado
+  // En esta UI cargamos directamente reservas por usuario desde el servicio, por lo que ya vienen filtradas
+  return props.reservas;
 });
 
 function obtenerNombreCancha(canchaId) {

@@ -21,9 +21,8 @@ services:
       context: ./fastapi-reservas-backend    # ← Cambia esto
       dockerfile: Dockerfile
     container_name: fastapi-app
-    environment:
-      APP_SECRET_KEY: "${APP_SECRET_KEY}"
-      DATABASE_URL: "${DATABASE_URL}"
+    env_file:
+      - ./fastapi-reservas-backend/.env
     ports:
       - "8000:8000"
     depends_on:

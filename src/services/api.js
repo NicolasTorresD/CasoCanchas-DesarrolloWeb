@@ -1,7 +1,9 @@
 /**
  * Servicio de API para manejo de datos
- * Separa la lógica de comunicación con APIs externas y datos locales
+ * - Clima: servicio público Open-Meteo
+ * - Datos de negocio (canchas, reservas, feedbacks): FastAPI (MySQL)
  */
+import backend from './backend';
 
 // Configuración de la API de clima usando variables de entorno
 const CLIMA_CONFIG = {
@@ -16,33 +18,68 @@ const CLIMA_CONFIG = {
  */
 export async function cargarCanchas() {
   try {
-    const response = await fetch('/canchas.json');
-    if (!response.ok) throw new Error('Error al cargar canchas');
-    return await response.json();
+    // Traer canchas y deportes para mapear id_deporte -> nombre
+    const [canchasRes, deportesRes] = await Promise.all([
+      backend.get('/api/v1/canchas'),
+      backend.get('/api/v1/deportes')
+    ]);
+
+    const deportesMap = new Map(
+      (deportesRes.data || []).map((d) => [d.id_deporte, d.nombre])
+    );
+
+    // Adaptar el payload del backend al formato esperado por la UI
+    return (canchasRes.data || []).map((c) => ({
+      id: c.id_cancha,
+      codigo: c.codigo,
+      nombre: c.nombre,
+      deporte: deportesMap.get(c.id_deporte) || 'desconocido',
+      imagen: c.imagen_url || '',
+      color: c.color || '#000000',
+      precio: Number(c.precio_hora), // La UI lo multiplica x1000 al mostrar
+      disponibilidad: [] // TODO: integrar horarios/ocupación real si se requiere filtrar por fecha
+    }));
   } catch (error) {
-    console.error('Error cargando canchas:', error);
+    console.error('Error cargando canchas desde API:', error);
     return [];
   }
 }
 
-export async function cargarReservas() {
+export async function cargarReservas(usuarioId) {
   try {
-    const response = await fetch('/reservas.json');
-    if (!response.ok) throw new Error('Error al cargar reservas');
-    return await response.json();
+    const url = usuarioId
+      ? `/api/v1/reservas?usuario_id=${encodeURIComponent(usuarioId)}`
+      : '/api/v1/reservas';
+    const { data } = await backend.get(url);
+    // Adaptar al formato esperado por la UI
+    return (data || []).map((r) => ({
+      id: r.id_reserva,
+      // nombre: lo muestra la UI con el usuario logueado, no viene en la reserva
+      canchaId: r.id_cancha,
+      fecha: r.fecha,
+      hora: r.hora
+    }));
   } catch (error) {
-    console.error('Error cargando reservas:', error);
+    console.error('Error cargando reservas desde API:', error);
     return [];
   }
 }
 
 export async function cargarFeedbacks() {
   try {
-    const response = await fetch('/feedbacks.json');
-    if (!response.ok) throw new Error('Error al cargar feedbacks');
-    return await response.json();
+    const { data } = await backend.get('/api/v1/feedbacks');
+    // Adaptar: la API devuelve ids; la UI espera usuario (string) para mostrar
+    // Mostramos sin nombre de usuario y mapeamos campos clave usados (canchaId, calificacion, fecha)
+    return (data || []).map((f) => ({
+      id: f.id_feedback,
+      usuario: f.usuario_nombre || '',
+      canchaId: f.id_cancha,
+      calificacion: f.calificacion,
+      comentario: f.comentario || '',
+      fecha: f.fecha
+    }));
   } catch (error) {
-    console.error('Error cargando feedbacks:', error);
+    console.error('Error cargando feedbacks desde API:', error);
     return [];
   }
 }
@@ -164,44 +201,80 @@ export function obtenerIconoClima(codigo) {
 /**
  * Guarda una nueva reserva (simulado con localStorage)
  */
-export function guardarReserva(reserva) {
+export async function guardarReserva({ usuarioId, canchaId, fecha, hora, precioHora }) {
   try {
-    const reservasGuardadas = JSON.parse(localStorage.getItem('reservas') || '[]');
-    reservasGuardadas.push(reserva);
-    localStorage.setItem('reservas', JSON.stringify(reservasGuardadas));
-    return { success: true };
+    const payload = {
+      id_usuario: Number(usuarioId),
+      id_cancha: Number(canchaId),
+      fecha,
+      hora,
+      duracion: 60, // minutos
+      estado: 'Reservada',
+      precio_total: Number(precioHora ?? 0)
+    };
+    const { data } = await backend.post('/api/v1/reservas', payload);
+    return { success: true, data };
   } catch (error) {
-    console.error('Error guardando reserva:', error);
-    return { success: false, error: 'Error al guardar la reserva' };
+    console.error('Error guardando reserva en API:', error?.response?.data || error);
+    const detail = error?.response?.data?.detail || 'Error al guardar la reserva';
+    return { success: false, error: detail };
   }
 }
 
 /**
  * Cancela una reserva por ID
  */
-export function cancelarReserva(id) {
+export async function cancelarReserva(id) {
   try {
-    const reservasGuardadas = JSON.parse(localStorage.getItem('reservas') || '[]');
-    const reservasFiltradas = reservasGuardadas.filter(r => r.id !== id);
-    localStorage.setItem('reservas', JSON.stringify(reservasFiltradas));
-    return { success: true };
+    const { data } = await backend.delete(`/api/v1/reservas/${id}`);
+    return { success: true, data };
   } catch (error) {
-    console.error('Error cancelando reserva:', error);
-    return { success: false, error: 'Error al cancelar la reserva' };
+    console.error('Error cancelando reserva en API:', error?.response?.data || error);
+    const detail = error?.response?.data?.detail || 'Error al cancelar la reserva';
+    return { success: false, error: detail };
   }
 }
 
 /**
  * Guarda un nuevo feedback
  */
-export function guardarFeedback(feedback) {
+// NOTA: crear feedback en API requiere id_reserva. La UI actual no lo solicita.
+// Dejamos este método como no implementado hacia el backend por ahora y
+// podríamos ampliarlo más adelante vinculando feedbacks a reservas del usuario.
+export async function guardarFeedback({ usuarioId, canchaId, calificacion, comentario, fechaPreferida }) {
   try {
-    const feedbacksGuardados = JSON.parse(localStorage.getItem('feedbacks') || '[]');
-    feedbacksGuardados.push(feedback);
-    localStorage.setItem('feedbacks', JSON.stringify(feedbacksGuardados));
-    return { success: true };
+    // 1) Obtener reservas del usuario
+    const { data: reservasUsuario } = await backend.get(`/api/v1/reservas?usuario_id=${encodeURIComponent(usuarioId)}`);
+    if (!reservasUsuario || reservasUsuario.length === 0) {
+      return { success: false, error: 'No tienes reservas asociadas para dejar un comentario' };
+    }
+
+    // 2) Intentar encontrar una reserva para esa cancha; si se provee fechaPreferida (YYYY-MM-DD), priorizar esa
+    let candidata = null;
+    const mismasCancha = reservasUsuario.filter(r => r.id_cancha === Number(canchaId));
+    if (mismasCancha.length === 0) {
+      return { success: false, error: 'No encontramos una reserva tuya para esa cancha' };
+    }
+
+    if (fechaPreferida) {
+      candidata = mismasCancha.find(r => r.fecha === fechaPreferida) || null;
+    }
+    // Si no se indicó fecha o no se encontró, tomar la más reciente por fecha
+    if (!candidata) {
+      candidata = [...mismasCancha].sort((a, b) => (a.fecha < b.fecha ? 1 : -1))[0];
+    }
+
+    if (!candidata) {
+      return { success: false, error: 'No encontramos una reserva válida para asociar el feedback' };
+    }
+
+    // 3) Crear feedback en API
+    const body = { calificacion: Number(calificacion), comentario: comentario || '' };
+    const { data } = await backend.post(`/api/v1/feedbacks/reserva/${candidata.id_reserva}?usuario_id=${encodeURIComponent(usuarioId)}`, body);
+    return { success: true, data };
   } catch (error) {
-    console.error('Error guardando feedback:', error);
-    return { success: false, error: 'Error al guardar el comentario' };
+    console.error('Error guardando feedback en API:', error?.response?.data || error);
+    const detail = error?.response?.data?.detail || 'Error al guardar el comentario';
+    return { success: false, error: detail };
   }
 }

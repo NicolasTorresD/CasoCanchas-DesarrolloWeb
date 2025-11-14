@@ -178,30 +178,9 @@ const usuario = ref(null);
 async function cargarDatos() {
   try {
     canchas.value = await cargarCanchas();
-    reservas.value = await cargarReservas();
+    const userId = usuario.value?.id_usuario;
+    reservas.value = await cargarReservas(userId);
     feedbacks.value = await cargarFeedbacks();
-
-    // Fusionar con datos en localStorage
-    const reservasGuardadas = localStorage.getItem('reservas');
-    if (reservasGuardadas) {
-      try {
-        const reservasLS = JSON.parse(reservasGuardadas);
-        reservas.value = [...reservas.value, ...reservasLS];
-      } catch (e) {
-        console.error('Error cargando reservas del localStorage', e);
-      }
-    }
-
-    const feedbacksGuardados = localStorage.getItem('feedbacks');
-    if (feedbacksGuardados) {
-      try {
-        const feedbacksLS = JSON.parse(feedbacksGuardados);
-        feedbacks.value = [...feedbacks.value, ...feedbacksLS];
-      } catch (e) {
-        console.error('Error cargando feedbacks del localStorage', e);
-      }
-    }
-
     console.log(`📊 Datos cargados: ${canchas.value.length} canchas, ${reservas.value.length} reservas, ${feedbacks.value.length} feedbacks`);
   } catch (e) {
     console.error('Error cargando datos:', e);
@@ -263,19 +242,32 @@ function prepararReserva(cancha) {
   modal.show();
 }
 
-function agregarReserva(nuevaReserva) {
-  console.log('✅ Nueva reserva creada:', nuevaReserva);
+async function agregarReserva(nuevaReserva) {
+  // nuevaReserva: { id (tmp), nombre, canchaId, fecha, hora }
+  if (!usuario.value?.id_usuario) {
+    alert('Debes iniciar sesión para reservar');
+    return;
+  }
+
+  const cancha = canchas.value.find(c => c.id === nuevaReserva.canchaId);
+  const precioHora = cancha?.precio ?? 0;
   
-  // Agregar a la lista de reservas
-  reservas.value.push(nuevaReserva);
-  
-  // Guardar en localStorage
-  guardarReserva(nuevaReserva);
-  
-  // Mostrar alerta de éxito
+  const result = await guardarReserva({
+    usuarioId: usuario.value.id_usuario,
+    canchaId: nuevaReserva.canchaId,
+    fecha: nuevaReserva.fecha,
+    hora: nuevaReserva.hora,
+    precioHora
+  });
+
+  if (!result.success) {
+    alert(`No se pudo crear la reserva: ${result.error}`);
+    return;
+  }
+
+  // Refrescar reservas desde API para mantener consistencia
+  reservas.value = await cargarReservas(usuario.value.id_usuario);
   alert('¡Reserva realizada con éxito!');
-  
-  // Cambiar a la página de reservas
   cambiarPagina('reservas');
 }
 
@@ -287,48 +279,60 @@ function mostrarModalCancelacion(idReserva) {
   modal.show();
 }
 
-function confirmarCancelacion() {
+async function confirmarCancelacion() {
   if (!idReservaACancelar.value) return;
-  
-  // Eliminar de la lista
-  reservas.value = reservas.value.filter(r => r.id !== idReservaACancelar.value);
-  
-  // Eliminar del localStorage
-  cancelarReserva(idReservaACancelar.value);
-  
+
+  const resp = await cancelarReserva(idReservaACancelar.value);
+  if (!resp.success) {
+    alert(`No se pudo cancelar la reserva: ${resp.error}`);
+    return;
+  }
+
+  // Refrescar lista
+  if (usuario.value?.id_usuario) {
+    reservas.value = await cargarReservas(usuario.value.id_usuario);
+  } else {
+    reservas.value = await cargarReservas();
+  }
+
   console.log('🗑️ Reserva cancelada:', idReservaACancelar.value);
-  
+
   // Cerrar modal
   const modalElement = document.getElementById('modalCancelar');
   const modal = window.bootstrap.Modal.getInstance(modalElement);
   if (modal) {
     modal.hide();
   }
-  
+
   alert('Reserva cancelada exitosamente');
   idReservaACancelar.value = null;
 }
 
 // Gestión de feedbacks
-function agregarFeedback(nuevoFeedback) {
+async function agregarFeedback(nuevoFeedback) {
+  if (!usuario.value?.id_usuario) {
+    alert('Debes iniciar sesión para dejar una opinión');
+    return;
+  }
+
   const fechaActual = new Date();
-  const fechaFormateada = fechaActual.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-  
-  const feedbackCompleto = {
-    id: Date.now().toString(),
-    ...nuevoFeedback,
-    fecha: fechaFormateada,
-    timestamp: fechaActual.toISOString()
-  };
-  
-  console.log('💬 Nuevo feedback agregado:', feedbackCompleto);
-  
-  // Agregar a la lista
-  feedbacks.value.push(feedbackCompleto);
-  
-  // Guardar en localStorage
-  guardarFeedback(feedbackCompleto);
-  
+  const fechaFormateada = fechaActual.toISOString().split('T')[0]; // YYYY-MM-DD
+
+  const resp = await guardarFeedback({
+    usuarioId: usuario.value.id_usuario,
+    canchaId: nuevoFeedback.canchaId,
+    calificacion: nuevoFeedback.calificacion,
+    comentario: nuevoFeedback.comentario,
+    fechaPreferida: fechaFormateada
+  });
+
+  if (!resp.success) {
+    alert(`No se pudo guardar tu opinión: ${resp.error}`);
+    return;
+  }
+
+  // Refrescar feedbacks desde API
+  feedbacks.value = await cargarFeedbacks();
   alert('¡Gracias por tu opinión!');
 }
 </script>

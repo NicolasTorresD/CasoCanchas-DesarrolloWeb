@@ -18,6 +18,8 @@ class FeedbackResponse(BaseModel):
     calificacion: int
     comentario: Optional[str]
     fecha: datetime
+    # Campo adicional para exponer el nombre del usuario autor del feedback
+    usuario_nombre: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -28,6 +30,7 @@ class Feedback(FeedbackBase):
     id_usuario: int
     id_cancha: int
     fecha: datetime
+    usuario_nombre: Optional[str] = None
 
     class Config:
         from_attributes = True

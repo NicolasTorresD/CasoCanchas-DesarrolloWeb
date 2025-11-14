@@ -235,18 +235,39 @@ cd CasoCanchas-DesarrolloWeb
 ```
 
 ### **2. Configurar variables de entorno**
-Crear archivo `.env` en la raíz del proyecto:
+El proyecto utiliza DOS archivos de entorno (uno por servicio):
+
+1) Raíz del repo (`.env`) — variables del FRONTEND (Vite)
 ```env
-# Base de datos
+# URL del backend (opcional, por defecto http://127.0.0.1:8000)
+VITE_BACKEND_URL=http://127.0.0.1:8000
+
+# Config Open-Meteo (opcional)
+VITE_CLIMA_API_URL=https://api.open-meteo.com/v1/forecast
+VITE_CLIMA_LATITUDE=-33.4489
+VITE_CLIMA_LONGITUDE=-70.6693
+VITE_CLIMA_TIMEZONE=America/Santiago
+```
+
+2) Backend (`fastapi-reservas-backend/.env`) — variables de FASTAPI y MySQL
+```env
+# Base de datos MySQL
 MYSQL_ROOT_PASSWORD=rootpassword
 MYSQL_DATABASE=canchas_db
 MYSQL_USER=canchas_user
 MYSQL_PASSWORD=canchas_password
 
-# FastAPI
+# Conexión SQLAlchemy usada por el backend
 DATABASE_URL=mysql+pymysql://canchas_user:canchas_password@db:3306/canchas_db
-APP_SECRET_KEY=xK9mP2vN8qR5tL3wZ7jH4sC6yF1aE0bD9gU8iO
+
+# Seguridad
+APP_SECRET_KEY=please_change_me
+JWT_ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=60
+BCRYPT_ROUNDS=12
 ```
+
+Docker Compose carga automáticamente `fastapi-reservas-backend/.env` para el servicio del backend.
 
 ### **3. Construir e iniciar los servicios**
 ```bash
@@ -259,16 +280,13 @@ Este comando:
 - Inicia el contenedor de MySQL 8.0
 - Inicia todos los servicios en modo background
 
-### **4. Cargar datos iniciales (primera ejecución)**
+### **4. Carga de datos iniciales**
+El backend intenta sembrar datos automáticamente al iniciar si la BD está vacía (deportes, canchas, usuarios, reservas y feedbacks de ejemplo).
+
+Para forzar la carga manualmente:
 ```bash
 docker exec -i fastapi-app python -m app.scripts.load_initial_data
 ```
-
-Esto carga en la BD:
-- 3 deportes (fútbol, tenis, pádel)
-- 15 canchas de ejemplo
-- 5 usuarios de ejemplo
-- Reservas y feedbacks iniciales
 
 ### **5. Acceder a la aplicación**
 - **Frontend:** http://localhost
@@ -337,6 +355,7 @@ La aplicación estará en `http://localhost:5173`
 - **Autenticación:** JWT con expiración configurables
 - **Contraseñas:** Hash con bcrypt
 - **CORS:** Configurado para aceptar solicitudes del frontend
+ - **CORS:** Permitidos los orígenes `http://localhost` y `http://127.0.0.1` (incl. puerto 80). Si usas otra URL/puerto, agrega el origen en `app/main.py` y reinicia el backend.
 - **Validación:** Todos los inputs validados con Pydantic
 - **BD:** Credenciales en `.env` (no en repositorio)
 
@@ -360,15 +379,23 @@ GET    /api/v1/canchas?deporte=.. - Filtrar por deporte
 
 ### **Reservas**
 ```
-POST   /api/v1/reservas           - Crear reserva
-GET    /api/v1/reservas           - Mis reservas
-DELETE /api/v1/reservas/{id}      - Cancelar reserva
+POST   /api/v1/reservas                 - Crear reserva (estado: Reservada/Cancelada/Completada)
+GET    /api/v1/reservas                 - Listar reservas
+GET    /api/v1/reservas?usuario_id=1    - Listar reservas de un usuario
+DELETE /api/v1/reservas/{id}            - Cancelar (soft delete → estado Cancelada)
 ```
 
 ### **Feedbacks**
 ```
-POST   /api/v1/feedbacks          - Crear feedback
-GET    /api/v1/feedbacks          - Listar feedbacks
+# Crear feedback asociado a una reserva del usuario
+POST   /api/v1/feedbacks/reserva/{reserva_id}?usuario_id=1
+
+# Listar feedbacks (incluye usuario_nombre)
+GET    /api/v1/feedbacks
+
+# Listar por cancha o por usuario
+GET    /api/v1/feedbacks/cancha/{cancha_id}
+GET    /api/v1/feedbacks/usuario/{usuario_id}
 ```
 
 ---
@@ -384,6 +411,26 @@ Durante el desarrollo, el equipo utilizó ChatGPT y Copilot como asistentes de a
   - Optimizar la dockerización del proyecto
 
 La IA fue utilizada como una herramienta de asistencia técnica y aprendizaje, no como reemplazo del trabajo del equipo.
+
+
+---
+
+## 🛠️ Troubleshooting rápido
+
+- 500 al crear reserva con "Data truncated for column 'estado'":
+  - Envía `estado` con un valor válido: `Reservada`, `Cancelada` o `Completada`.
+  - El frontend ya envía `Reservada` por defecto.
+
+- CORS Missing Allow Origin:
+  - Asegura que accedes desde `http://localhost` o `http://127.0.0.1`.
+  - Para otros orígenes, agrégalos en el middleware CORS (archivo `app/main.py`) y reinicia el backend.
+
+- ¿Frontend apunta al backend incorrecto?
+  - Ajusta `VITE_BACKEND_URL` en `.env` de la raíz y reconstruye el frontend.
+
+- ¿Datos de ejemplo no aparecen?
+  - Revisa logs del backend y ejecuta manualmente el seeding:
+    `docker exec -i fastapi-app python -m app.scripts.load_initial_data`.
 
 
 ---
