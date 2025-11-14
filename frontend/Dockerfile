@@ -26,11 +26,6 @@ COPY --from=builder /app/dist /usr/share/nginx/html/
 # Copiar imágenes estáticas del repo al html de nginx
 COPY imagenes/ /usr/share/nginx/html/imagenes/
 
-# Copiar JSONs de datos al html para que el frontend pueda cargarlos
-COPY canchas.json /usr/share/nginx/html/canchas.json
-COPY reservas.json /usr/share/nginx/html/reservas.json
-COPY feedbacks.json /usr/share/nginx/html/feedbacks.json
-
 # Exponer el puerto 80
 EXPOSE 80
 

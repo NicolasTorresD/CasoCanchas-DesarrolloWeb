@@ -134,7 +134,7 @@ Esta integración permite que el usuario considere las condiciones climáticas a
 
 El proyecto está organizado en dos directorios principales:
 
-### **Frontend** (root)
+### **Frontend** (`frontend/`)
 ```
 src/
 ├── components/              # Componentes reutilizables de Vue
@@ -152,8 +152,9 @@ src/
 index.html                  # Template HTML
 vite.config.js             # Configuración de Vite
 styles.css                 # Estilos globales
-Dockerfile.frontend        # Imagen Docker (Node build + Nginx)
+Dockerfile                 # Imagen Docker (Node build + Nginx)
 package.json               # Dependencias frontend
+imagenes/                  # Imágenes estáticas
 ```
 
 ### **Backend** (`fastapi-reservas-backend/`)
@@ -210,10 +211,12 @@ Dockerfile                 # Imagen Docker del backend
 ### **Base de Datos & Orquestación**
 ```
 docker-compose.yml         # Orquestación de servicios
-.env                       # Variables de entorno
+.env                       # Variables de entorno para Vite/frontend
 canchas.json               # Datos iniciales (canchas)
 reservas.json              # Datos iniciales (reservas de ejemplo)
 feedbacks.json             # Datos iniciales (feedbacks de ejemplo)
+frontend/                  # Carpeta del frontend Vue
+fastapi-reservas-backend/  # Carpeta del backend FastAPI
 ```
 
 
@@ -342,6 +345,7 @@ uvicorn app.main:app --reload
 
 ### **Frontend**
 ```bash
+cd frontend
 npm install
 npm run dev
 ```
