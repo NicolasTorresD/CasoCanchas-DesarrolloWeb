@@ -12,9 +12,11 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
-      timeout: 20s
-      retries: 10
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "canchas_user", "-pcanchas_password"]
+      interval: 5s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
 
   fastapi-app:
     build:
